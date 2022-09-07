@@ -30,7 +30,7 @@ namespace ZaliczenieWF.Core.Services
             _source = new CancellationTokenSource();
             _token = _source.Token;
 
-            using (var serial = new SerialPortStream(serialPort))
+            using (var serial = new SerialPortStream(serialPort, 9600, 8, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One))
             {
                 try
                 {
@@ -46,27 +46,16 @@ namespace ZaliczenieWF.Core.Services
                 await Task.Run(() =>
                 {
                     _logger.LogDebug("Task running");
-                    var message = "";
+                    serial.DiscardInBuffer();
+                    //var message = "";
                     while (!_token.IsCancellationRequested)
                     {
-                        var ch = (char)serial.ReadChar();
-                        if (ch == '\n' || ch == '\r')
-                        {
-                            var args = new ScoreReceivedEventArgs
-                            {
-                                Score = message
-                            };
-                            OnScoreReceived(args);
-                            //_logger.LogDebug(message);
-                            message = "";
-                        }
-                        else
-                        {
-                            message += ch;
-                        }
+                        var message = serial.ReadLine();
+                        Thread.Sleep(100);
+                        OnScoreReceived(new ScoreReceivedEventArgs { Score = message });
                     }
-                    serial.Close();
                 }, _token);
+                serial.Close();
             }
         }
 
