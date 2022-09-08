@@ -38,6 +38,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
             ConnectToPort = new MvxAsyncCommand(async () => await _commsService.Connect(SelectedSerialPort));
             Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
+            AddParticipantCommand = new MvxAsyncCommand(async () => await AddNewParticipantAsync());
 
             _commsService.ScoreReceived += ScoreReceived;
             _commsService.SerialConnection += OnSerialConnection;
@@ -53,6 +54,12 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         {
             _navigationService.Navigate<ModalViewModel, string>(e.Score);
             //_logger.LogDebug(e.Score.ToString());
+        }
+
+        private async Task AddNewParticipantAsync()
+        {
+            Participant result = await _navigationService.Navigate<AddParticipantViewModel, Participant, Participant>(new Participant());
+            if(result != null) Participants.Add(result);
         }
 
         public string SelectedSerialPort
@@ -76,8 +83,9 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             }
         }
 
-        public MvxAsyncCommand ConnectToPort { get; set; }
-        public MvxCommand Disconnect { get; set; }
+        public IMvxAsyncCommand ConnectToPort { get; set; }
+        public IMvxCommand Disconnect { get; set; }
+        public IMvxAsyncCommand AddParticipantCommand { get; set; }
 
         private ObservableCollection<string> _ports;
         public ObservableCollection<string> Ports
