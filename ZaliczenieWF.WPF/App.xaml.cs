@@ -19,6 +19,7 @@ namespace ZaliczenieWF.WPF
         protected override void RegisterSetup()
         {
             this.RegisterSetupType<Setup>();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NzEyNTc0QDMyMzAyZTMyMmUzMFRiVVVhbXpvWnVJdzV1SmIwa1UxbzY5NEVBUUVyaGxjZVhTMTlKbW84dVE9");
         }
     }
 }
