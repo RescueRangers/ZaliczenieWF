@@ -13,5 +13,6 @@ namespace ZaliczenieWF.Core.Services
         Task Connect(string serialPort);
         void Disconnect(string serialPort);
         event EventHandler<ScoreReceivedEventArgs> ScoreReceived;
+        event EventHandler<SerialConnectionEventArgs> SerialConnection;
     }
 }

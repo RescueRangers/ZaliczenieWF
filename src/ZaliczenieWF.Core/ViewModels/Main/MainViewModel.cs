@@ -36,10 +36,17 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             _participants = new ObservableCollection<Participant>();
             _ports = new ObservableCollection<string>(_commsService.EnumerateSerialPorts());
 
-            ConnectToPort = new MvxAsyncCommand(async ()=> await _commsService.Connect(SelectedSerialPort));
-            Disconnect = new MvxCommand(()=> _commsService.Disconnect(SelectedSerialPort));
+            ConnectToPort = new MvxAsyncCommand(async () => await _commsService.Connect(SelectedSerialPort));
+            Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
 
             _commsService.ScoreReceived += ScoreReceived;
+            _commsService.SerialConnection += OnSerialConnection;
+        }
+
+        private void OnSerialConnection(object sender, SerialConnectionEventArgs e)
+        {
+            ConnectionStatus = e.ConnectionStatus;
+            if (e.IsError) _navigationService.Navigate<ModalViewModel, string>(e.ErrorMessage);
         }
 
         private void ScoreReceived(object sender, ScoreReceivedEventArgs e)
@@ -53,15 +60,23 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             get => _selectedSerialPort;
             set
             {
+                _selectedSerialPort = value;
                 RaisePropertyChanged(() => SelectedSerialPort);
                 RaisePropertyChanged(() => ConnectToPort);
-                _selectedSerialPort = value;
             }
         }
 
-        
+        public bool ConnectionStatus
+        {
+            get => _connectionStatus;
+            set
+            {
+                _connectionStatus = value;
+                RaisePropertyChanged(() => ConnectionStatus);
+            }
+        }
 
-        public MvxAsyncCommand ConnectToPort{get; set;}
+        public MvxAsyncCommand ConnectToPort { get; set; }
         public MvxCommand Disconnect { get; set; }
 
         private ObservableCollection<string> _ports;
@@ -77,6 +92,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
         private ObservableCollection<Participant> _participants;
         private string _selectedSerialPort;
+        private bool _connectionStatus;
 
         public ObservableCollection<Participant> Participants
         {

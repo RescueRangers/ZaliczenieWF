@@ -17,6 +17,7 @@ namespace ZaliczenieWF.Core.Services
         private CancellationTokenSource _source;
         private CancellationToken _token;
         public delegate void ScoreReceivedEventHandler(object sender, ScoreReceivedEventArgs e);
+        public delegate void SerialConnectionEventHandler(object sender, SerialConnectionEventArgs e);
 
         public CommsService(ILogger<CommsService> logger)
         {
@@ -37,10 +38,12 @@ namespace ZaliczenieWF.Core.Services
                     serial.Open();
                     _logger.LogDebug($"{serialPort} opened");
                     await serial.FlushAsync();
+                    OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = true });
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Exception: {ex.Message}");
+                    _logger.LogError(ex.Message);
+                    OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false, IsError = true, ErrorMessage = ex.Message });
                     return;
                 }
                 await Task.Run(() =>
@@ -56,6 +59,7 @@ namespace ZaliczenieWF.Core.Services
                     }
                 }, _token);
                 serial.Close();
+                OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false });
             }
         }
 
@@ -86,6 +90,14 @@ namespace ZaliczenieWF.Core.Services
         {
             EventHandler<ScoreReceivedEventArgs> handler = ScoreReceived;
             handler?.Invoke(this, e);
+        }
+
+        public event EventHandler<SerialConnectionEventArgs> SerialConnection;
+
+        protected virtual void OnSerialConnection(SerialConnectionEventArgs e)
+        {
+            EventHandler<SerialConnectionEventArgs> eventHandler = SerialConnection;
+            eventHandler?.Invoke(this, e);
         }
     }
 }
