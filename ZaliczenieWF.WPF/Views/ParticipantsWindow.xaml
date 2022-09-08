@@ -1,5 +1,5 @@
 ﻿<views:MvxWpfView
-    x:Class="ZaliczenieWF.WPF.Views._10x10View"
+    x:Class="ZaliczenieWF.WPF.Views.ParticipantsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -64,7 +64,12 @@
 
 
         </StackPanel>
-        <syncfusion:SfDataGrid AutoGenerateColumns="False" ItemsSource="{Binding Participants}">
+        <syncfusion:SfDataGrid
+            AllowDeleting="True"
+            AutoGenerateColumns="False"
+            ItemsSource="{Binding Participants}"
+            MouseDoubleClick="SfDataGrid_MouseDoubleClick"
+            SelectedItem="{Binding SelectedParticipant}">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn HeaderText="Naziwsko / Imię" MappingName="Name" />
                 <syncfusion:GridTextColumn HeaderText="Stopień" MappingName="Stopien" />
@@ -73,8 +78,19 @@
                     HeaderText="Kolumna"
                     MappingName="Kolumna" />
                 <syncfusion:GridTextColumn HeaderText="PESEL" MappingName="PESEL" />
-                <syncfusion:GridTextColumn HeaderText="Jednostka wojskowa / Odział" MappingName="JednostkaWojskowa" />
+                <syncfusion:GridTextColumn HeaderText="Jednostka wojskowa" MappingName="JednostkaWojskowa" />
                 <syncfusion:GridTextColumn HeaderText="Ocena" MappingName="Ocena" />
+                <syncfusion:GridTemplateColumn syncfusion:FocusManagerHelper.WantsKeyInput="True" MappingName="City">
+                    <syncfusion:GridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                syncfusion:FocusManagerHelper.FocusedElement="True"
+                                Command="{Binding RowDataCommand}"
+                                CommandParameter="{Binding}"
+                                Content="Click" />
+                        </DataTemplate>
+                    </syncfusion:GridTemplateColumn.CellTemplate>
+                </syncfusion:GridTemplateColumn>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
     </DockPanel>

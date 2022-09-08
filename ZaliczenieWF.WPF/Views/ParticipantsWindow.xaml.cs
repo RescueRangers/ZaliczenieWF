@@ -25,11 +25,16 @@ namespace ZaliczenieWF.WPF.Views
 
     [MvxContentPresentation]
     [MvxViewFor(typeof(MainViewModel))]
-    public partial class _10x10View : MvxWpfView
+    public partial class ParticipantsWindow : MvxWpfView
     {
-        public _10x10View()
+        public ParticipantsWindow()
         {
             InitializeComponent();
+        }
+
+        private void SfDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Console.WriteLine("Dupa");
         }
     }
 }

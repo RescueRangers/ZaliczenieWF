@@ -39,15 +39,22 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             ConnectToPort = new MvxAsyncCommand(async () => await _commsService.Connect(SelectedSerialPort));
             Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
             AddParticipantCommand = new MvxAsyncCommand(async () => await AddNewParticipantAsync());
+            RowDataCommand = new MvxCommand(() => GetRowData());
 
             _commsService.ScoreReceived += ScoreReceived;
             _commsService.SerialConnection += OnSerialConnection;
         }
 
+        private void GetRowData()
+        {
+            var rowData = new List<string>();
+        }
+
         private void OnSerialConnection(object sender, SerialConnectionEventArgs e)
         {
             ConnectionStatus = e.ConnectionStatus;
-            if (e.IsError) _navigationService.Navigate<ModalViewModel, string>(e.ErrorMessage);
+            if (e.IsError)
+                _navigationService.Navigate<ModalViewModel, string>(e.ErrorMessage);
         }
 
         private void ScoreReceived(object sender, ScoreReceivedEventArgs e)
@@ -59,7 +66,8 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         private async Task AddNewParticipantAsync()
         {
             Participant result = await _navigationService.Navigate<AddParticipantViewModel, Participant, Participant>(new Participant());
-            if(result != null) Participants.Add(result);
+            if (result != null)
+                Participants.Add(result);
         }
 
         public string SelectedSerialPort
@@ -70,6 +78,16 @@ namespace ZaliczenieWF.Core.ViewModels.Main
                 _selectedSerialPort = value;
                 RaisePropertyChanged(() => SelectedSerialPort);
                 RaisePropertyChanged(() => ConnectToPort);
+            }
+        }
+
+        public Participant SelectedParticipant
+        {
+            get => _selectedParticipant;
+            set
+            {
+                _selectedParticipant = value;
+                RaisePropertyChanged(() => SelectedParticipant);
             }
         }
 
@@ -86,6 +104,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         public IMvxAsyncCommand ConnectToPort { get; set; }
         public IMvxCommand Disconnect { get; set; }
         public IMvxAsyncCommand AddParticipantCommand { get; set; }
+        public IMvxCommand RowDataCommand { get; set; }
 
         private ObservableCollection<string> _ports;
         public ObservableCollection<string> Ports
@@ -101,6 +120,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         private ObservableCollection<Participant> _participants;
         private string _selectedSerialPort;
         private bool _connectionStatus;
+        private Participant _selectedParticipant;
 
         public ObservableCollection<Participant> Participants
         {
