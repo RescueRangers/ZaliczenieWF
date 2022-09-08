@@ -11,6 +11,7 @@ namespace ZaliczenieWF.Core.Models
         public string Kolumna { get; set; }
         public double Time { get; set; }
         public double Score { get; set; }
+        public string JednostkaWojskowa { get; set; }
 
         public List<string> Kolumny { get; set; } = new List<string> { "I", "II", "III", "IV", "V" };
     }
