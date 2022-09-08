@@ -85,7 +85,31 @@
                 <syncfusion:ComboBoxAdv ItemsSource="{Binding Stopnie}" SelectedValue="{Binding EditingParticipant.Stopien}" />
 
             </syncfusion:SfTextInputLayout>
+            <syncfusion:SfTextInputLayout
+                x:Name="kolumnaInputLayout"
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,20,0,0"
+                CharMaxLength="10"
+                ContainerType="Outlined"
+                ErrorText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ErrorConverter}}"
+                HasError="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ObjectToBoolConverter}}"
+                HelperText="Wybierz kolumne z listy"
+                Hint="Kolumna"
+                HintFloatMode="Float"
+                LeadingViewPosition="Outside">
 
+                <syncfusion:SfTextInputLayout.LeadingView>
+                    <Label
+                        x:Name="altPhNumberLeadingView"
+                        Padding="14,0,0,0"
+                        Content="&#xe766;"
+                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                </syncfusion:SfTextInputLayout.LeadingView>
+
+                <syncfusion:ComboBoxAdv ItemsSource="{Binding EditingParticipant.Kolumny}" SelectedValue="{Binding EditingParticipant.Kolumna}" />
+            </syncfusion:SfTextInputLayout>
+            
             <syncfusion:SfTextInputLayout
                 x:Name="peselInputLayout"
                 Grid.Row="1"
@@ -117,30 +141,7 @@
                     UseNullOption="True" />
             </syncfusion:SfTextInputLayout>
 
-            <syncfusion:SfTextInputLayout
-                x:Name="kolumnaInputLayout"
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="0,20,0,0"
-                CharMaxLength="10"
-                ContainerType="Outlined"
-                ErrorText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ErrorConverter}}"
-                HasError="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ObjectToBoolConverter}}"
-                HelperText="Wybierz kolumne z listy"
-                Hint="Kolumna"
-                HintFloatMode="Float"
-                LeadingViewPosition="Outside">
 
-                <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        x:Name="altPhNumberLeadingView"
-                        Padding="14,0,0,0"
-                        Content="&#xe766;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
-                </syncfusion:SfTextInputLayout.LeadingView>
-
-                <syncfusion:ComboBoxAdv ItemsSource="{Binding EditingParticipant.Kolumny}" SelectedValue="{Binding EditingParticipant.Kolumna}" />
-            </syncfusion:SfTextInputLayout>
 
             <syncfusion:SfTextInputLayout
                 x:Name="jednostkaInputLayout"
