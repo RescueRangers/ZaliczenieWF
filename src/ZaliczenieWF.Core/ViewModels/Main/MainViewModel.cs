@@ -12,6 +12,7 @@ using ZaliczenieWF.Core.Models;
 using ZaliczenieWF.Core.Services;
 using MvvmCross.Navigation;
 using System.Globalization;
+using System.Threading;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
@@ -47,6 +48,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
 #if DEBUG
             _participants.Add(new Participant { Name = "Test Testinski", Kolumna = "I", Stopien = "Szeregowy", PESEL = "86110107019", JednostkaWojskowa = "JW"});
+            DebugEventCommand = new MvxCommand(() => OnScoreReceived(this, new ScoreReceivedEventArgs { Competition = Competition.Brzuszki, Score = "22" }));
 #endif
         }
 
@@ -139,6 +141,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         public IMvxCommand Disconnect { get; set; }
         public IMvxAsyncCommand AddParticipantCommand { get; set; }
         public IMvxCommand OpenScoreCardCommand { get; set; }
+        public IMvxCommand DebugEventCommand { get; set; }
 
         private ObservableCollection<string> _ports;
         public ObservableCollection<string> Ports

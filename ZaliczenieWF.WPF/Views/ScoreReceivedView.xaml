@@ -8,8 +8,10 @@
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     Title="ScoreReceivedView"
-    Width="600"
-    Height="250"
+    Width="840"
+    Height="430"
+    MinWidth="840"
+    MinHeight="350"
     ResizeMode="NoResize"
     mc:Ignorable="d">
     <DockPanel Margin="10" LastChildFill="True">
@@ -27,10 +29,29 @@
                     Text="{Binding Score.CompetitionString}" />
             </StackPanel>
             <StackPanel Orientation="Vertical">
-                <Label Content="Prosze wybrac zawodnika z listy ponizej" />
-                <syncfusion:SfTextInputLayout Hint="Zawodnicy">
-                    <ComboBox ItemsSource="{Binding Score.Participants}" SelectedItem="{Binding Participant}" />
-                </syncfusion:SfTextInputLayout>
+                <Label Content="Prosze wybrac zawodnika z listy lub dodac nowego." />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="155" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55" />
+                    </Grid.RowDefinitions>
+                    <syncfusion:SfTextInputLayout Grid.Column="0" Hint="Zawodnicy">
+                        <ComboBox ItemsSource="{Binding Score.Participants}" SelectedItem="{Binding Participant}" />
+                    </syncfusion:SfTextInputLayout>
+                    <Button
+                        Grid.Column="1"
+                        Width="150"
+                        Height="35"
+                        Margin="5,0,0,10"
+                        HorizontalAlignment="Center"
+                        BorderThickness="0"
+                        Command="{Binding AddParticipantCommand}"
+                        Content="Dodaj" />
+                </Grid>
+
             </StackPanel>
         </StackPanel>
 

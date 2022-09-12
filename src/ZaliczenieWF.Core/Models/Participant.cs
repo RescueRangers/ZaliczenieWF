@@ -158,6 +158,8 @@ namespace ZaliczenieWF.Core.Models
         {
             return _errorsByPropertyName.ContainsKey(propertyName) ? _errorsByPropertyName[propertyName] : null;
         }
+
+        public override string ToString() => Name;
     }
 }
 
