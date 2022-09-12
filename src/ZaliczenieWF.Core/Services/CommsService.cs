@@ -74,7 +74,7 @@ namespace ZaliczenieWF.Core.Services
                             case "3000m start":
                                 _currentCompetition = Competition.Marszobieg;
                                 break;
-                            case "brzuszki start":
+                            case "sklony start":
                                 _currentCompetition = Competition.Brzuszki;
                                 break;
                             default:
@@ -101,6 +101,7 @@ namespace ZaliczenieWF.Core.Services
             message = message.Remove(0, 7);
 
             OnScoreReceived(new ScoreReceivedEventArgs { Competition = _currentCompetition, Score = message });
+            _currentCompetition = Competition.Null;
         }
 
         public void Disconnect(string serialPort)
