@@ -19,12 +19,8 @@
         <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
     </views:MvxWpfView.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="1">
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -53,13 +49,12 @@
                 LeadingViewPosition="Outside">
 
                 <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        Padding="14,0,0,0"
-                        Content="&#xe72a;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                    <Label />
                 </syncfusion:SfTextInputLayout.LeadingView>
 
-                <TextBox Text="{Binding EditingParticipant.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                <TextBox
+                    Loaded="TextBox_Loaded"
+                    Text="{Binding EditingParticipant.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             </syncfusion:SfTextInputLayout>
 
             <syncfusion:SfTextInputLayout
@@ -76,10 +71,7 @@
                 LeadingViewPosition="Outside">
 
                 <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        Padding="14,0,0,0"
-                        Content="&#xe72a;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                    <Label />
                 </syncfusion:SfTextInputLayout.LeadingView>
 
                 <syncfusion:ComboBoxAdv ItemsSource="{Binding Stopnie}" SelectedValue="{Binding EditingParticipant.Stopien}" />
@@ -100,16 +92,12 @@
                 LeadingViewPosition="Outside">
 
                 <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        x:Name="altPhNumberLeadingView"
-                        Padding="14,0,0,0"
-                        Content="&#xe766;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                    <Label />
                 </syncfusion:SfTextInputLayout.LeadingView>
 
                 <syncfusion:ComboBoxAdv ItemsSource="{Binding EditingParticipant.Kolumny}" SelectedValue="{Binding EditingParticipant.Kolumna}" />
             </syncfusion:SfTextInputLayout>
-            
+
             <syncfusion:SfTextInputLayout
                 x:Name="peselInputLayout"
                 Grid.Row="1"
@@ -125,11 +113,7 @@
                 LeadingViewPosition="Outside">
 
                 <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        x:Name="phoneNumberLeadingView"
-                        Padding="14,0,0,0"
-                        Content="&#xe766;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                    <Label />
                 </syncfusion:SfTextInputLayout.LeadingView>
 
                 <syncfusion:IntegerTextBox
@@ -156,11 +140,7 @@
                 LeadingViewPosition="Outside">
 
                 <syncfusion:SfTextInputLayout.LeadingView>
-                    <Label
-                        x:Name="notesLeadingView"
-                        Padding="10,0,0,0"
-                        Content="&#xe747;"
-                        FontFamily="/syncfusion.layoutdemos.wpf;component/Assets/textinputlayout/Sync FontIcons.ttf#Sync FontIcons" />
+                    <Label />
                 </syncfusion:SfTextInputLayout.LeadingView>
 
                 <TextBox
@@ -169,28 +149,28 @@
                     TextWrapping="Wrap" />
             </syncfusion:SfTextInputLayout>
 
-            <StackPanel
-                Grid.Row="5"
-                Grid.ColumnSpan="2"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal">
-                <Button
-                    Width="150"
-                    Height="35"
-                    HorizontalAlignment="Center"
-                    BorderThickness="0"
-                    Command="{Binding SubmitCommand}"
-                    Content="Zapisz" />
 
-                <Button
-                    Width="150"
-                    Height="35"
-                    Margin="50,0,0,0"
-                    HorizontalAlignment="Right"
-                    BorderThickness="0"
-                    Command="{Binding CancelCommand}"
-                    Content="Anuluj" />
-            </StackPanel>
         </Grid>
-    </Grid>
+        <StackPanel
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Bottom"
+            Orientation="Horizontal">
+            <Button
+                Width="150"
+                Height="35"
+                HorizontalAlignment="Center"
+                BorderThickness="0"
+                Command="{Binding SubmitCommand}"
+                Content="Zapisz" />
+
+            <Button
+                Width="150"
+                Height="35"
+                Margin="50,0,0,0"
+                HorizontalAlignment="Right"
+                BorderThickness="0"
+                Command="{Binding CancelCommand}"
+                Content="Anuluj" />
+        </StackPanel>
+    </DockPanel>
 </views:MvxWpfView>

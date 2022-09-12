@@ -10,7 +10,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MvvmCross.Platforms.Wpf.Presenters.Attributes;
 using MvvmCross.Platforms.Wpf.Views;
@@ -20,14 +19,14 @@ using ZaliczenieWF.Core.ViewModels.Main;
 namespace ZaliczenieWF.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for _10x10View.xaml
+    /// Interaction logic for ScoreReceivedView.xaml
     /// </summary>
-
-    [MvxContentPresentation]
-    [MvxViewFor(typeof(MainViewModel))]
-    public partial class ParticipantsWindow : MvxWpfView
+    ///
+    [MvxViewFor(typeof(ScoreReceivedViewModel))]
+    [MvxWindowPresentation(Identifier = nameof(ScoreReceivedView), Modal = true)]
+    public partial class ScoreReceivedView : MvxWindow
     {
-        public ParticipantsWindow()
+        public ScoreReceivedView()
         {
             InitializeComponent();
         }

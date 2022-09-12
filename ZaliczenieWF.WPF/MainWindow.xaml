@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     Title="MainWindow"
-    Width="800"
+    MinWidth="990"
+    MinHeight="450"
+    Width="990"
     Height="450"
     mc:Ignorable="d">
     <Grid />

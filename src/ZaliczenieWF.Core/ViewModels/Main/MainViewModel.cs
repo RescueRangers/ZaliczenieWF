@@ -11,6 +11,7 @@ using ZaliczenieWF.Core.Events;
 using ZaliczenieWF.Core.Models;
 using ZaliczenieWF.Core.Services;
 using MvvmCross.Navigation;
+using System.Globalization;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
@@ -39,15 +40,20 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             ConnectToPort = new MvxAsyncCommand(async () => await _commsService.Connect(SelectedSerialPort));
             Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
             AddParticipantCommand = new MvxAsyncCommand(async () => await AddNewParticipantAsync());
-            RowDataCommand = new MvxCommand(() => GetRowData());
+            OpenScoreCardCommand = new MvxCommand(() => OpenScoreCard());
 
-            _commsService.ScoreReceived += ScoreReceived;
+            _commsService.ScoreReceived += OnScoreReceived;
             _commsService.SerialConnection += OnSerialConnection;
+
+#if DEBUG
+            _participants.Add(new Participant { Name = "Test Testinski", Kolumna = "I", Stopien = "Szeregowy", PESEL = "86110107019", JednostkaWojskowa = "JW"});
+#endif
         }
 
-        private void GetRowData()
+        private void OpenScoreCard()
         {
-            var rowData = new List<string>();
+            if (SelectedParticipant == null)
+                return;
         }
 
         private void OnSerialConnection(object sender, SerialConnectionEventArgs e)
@@ -57,10 +63,38 @@ namespace ZaliczenieWF.Core.ViewModels.Main
                 _navigationService.Navigate<ModalViewModel, string>(e.ErrorMessage);
         }
 
-        private void ScoreReceived(object sender, ScoreReceivedEventArgs e)
+        private void OnScoreReceived(object sender, ScoreReceivedEventArgs e)
         {
-            _navigationService.Navigate<ModalViewModel, string>(e.Score);
-            //_logger.LogDebug(e.Score.ToString());
+            var score = new Score();
+            if (e.Competition == Competition.Brzuszki || e.Competition == Competition.Podciaganie)
+            {
+                if (int.TryParse(e.Score, out var qty))
+                {
+                    score = new Score { Competition = e.Competition, Quantity = qty, Participants = new List<Participant>(Participants) };
+                }
+                else
+                {
+                    _logger.LogError("Nie udalo sie przeksztalcic punktacji na int");
+                }
+            }
+            else
+            {
+                if (TimeSpan.TryParse(e.Score, CultureInfo.InvariantCulture, out TimeSpan time))
+                {
+                    score = new Score { Competition = e.Competition, Time = time, Participants = new List<Participant>(Participants) };
+                }
+                else
+                {
+                    _logger.LogError("Nie udalo sie przeksztalcic punktacji na czas");
+                }
+            }
+
+            _ = ShowReceivedScoreAsync(score);
+        }
+
+        private async Task ShowReceivedScoreAsync(Score score)
+        {
+            Score result = await _navigationService.Navigate<ScoreReceivedViewModel, Score, Score>(score);
         }
 
         private async Task AddNewParticipantAsync()
@@ -104,7 +138,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         public IMvxAsyncCommand ConnectToPort { get; set; }
         public IMvxCommand Disconnect { get; set; }
         public IMvxAsyncCommand AddParticipantCommand { get; set; }
-        public IMvxCommand RowDataCommand { get; set; }
+        public IMvxCommand OpenScoreCardCommand { get; set; }
 
         private ObservableCollection<string> _ports;
         public ObservableCollection<string> Ports
