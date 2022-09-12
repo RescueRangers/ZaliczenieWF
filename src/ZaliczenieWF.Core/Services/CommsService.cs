@@ -11,13 +11,23 @@ using ZaliczenieWF.Core.Events;
 
 namespace ZaliczenieWF.Core.Services
 {
+    public enum Competition
+    {
+        _10x10 = 1,
+        Brzuszki = 2,
+        Podciaganie = 3,
+        Marszobieg = 4,
+        Null = 5
+    }
     internal class CommsService : ICommsService
     {
+        
         private readonly ILogger<CommsService> _logger;
         private CancellationTokenSource _source;
         private CancellationToken _token;
         public delegate void ScoreReceivedEventHandler(object sender, ScoreReceivedEventArgs e);
         public delegate void SerialConnectionEventHandler(object sender, SerialConnectionEventArgs e);
+        private Competition _currentCompetition = Competition.Null;
 
         public CommsService(ILogger<CommsService> logger)
         {
@@ -55,12 +65,42 @@ namespace ZaliczenieWF.Core.Services
                     {
                         var message = serial.ReadLine();
                         Thread.Sleep(100);
+
+                        switch (message.ToLower())
+                        {
+                            case "10x10 start":
+                                _currentCompetition = Competition._10x10;
+                                break;
+                            case "3000m start":
+                                _currentCompetition = Competition.Marszobieg;
+                                break;
+                            case "brzuszki start":
+                                _currentCompetition = Competition.Brzuszki;
+                                break;
+                            default:
+                                if (message.StartsWith("wynik:", StringComparison.InvariantCultureIgnoreCase))
+                                    ProcessScores(message);
+                                break;
+                        }
+
                         OnScoreReceived(new ScoreReceivedEventArgs { Score = message });
                     }
                 }, _token);
                 serial.Close();
                 OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false });
             }
+        }
+
+        private void ProcessScores(string message)
+        {
+            if(_currentCompetition == Competition.Null)
+            {
+                _logger.LogError($"Wynik bez zadeklarowanej konkurencji. Wynik = {message}");
+                return;
+            }
+            message = message.Remove(0, 7);
+
+            OnScoreReceived(new ScoreReceivedEventArgs { Competition = _currentCompetition, Score = message });
         }
 
         public void Disconnect(string serialPort)
