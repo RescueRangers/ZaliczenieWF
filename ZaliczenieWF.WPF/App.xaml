@@ -5,5 +5,49 @@
     xmlns:local="clr-namespace:ZaliczenieWF.WPF"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     StartupUri="MainWindow.xaml">
-    <Application.Resources />
+    <Application.Resources >
+        <ResourceDictionary>
+            <Style x:Key="WindowStyleX" TargetType="{x:Type views:MvxWindow}">
+                <Setter Property="WindowStyle" Value="None" />
+                <Setter Property="AllowsTransparency" Value="False" />
+                <Setter Property="ResizeMode" Value="NoResize" />
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Window}">
+                            <Border BorderBrush="{DynamicResource BlackColor}" BorderThickness="1">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        Background="{DynamicResource BlackColor}">
+                                        <Grid>
+                                            <TextBlock
+                                Grid.Column="1"
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="{DynamicResource WhiteTextForeground}"
+                                Text="{TemplateBinding Title}" />
+                                        </Grid>
+                                    </Border>
+                                    <ContentPresenter Grid.Row="1" />
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
 </views:MvxApplication>

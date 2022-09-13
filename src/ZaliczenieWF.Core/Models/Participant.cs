@@ -8,7 +8,7 @@ using MvvmCross;
 namespace ZaliczenieWF.Core.Models
 {
 
-    public class Participant : INotifyDataErrorInfo
+    public class Participant : INotifyDataErrorInfo, IEquatable<Participant>
     {
         private void ValidateProperty(string property)
         {
@@ -120,6 +120,7 @@ namespace ZaliczenieWF.Core.Models
             }
         }
         public string Ocena { get; set; }
+        public List<Score> Scores { get; set; } = new List<Score>();
         public string Errors => GetErrors();
 
         private string GetErrors()
@@ -151,7 +152,6 @@ namespace ZaliczenieWF.Core.Models
         private void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-            
         }
 
         public IEnumerable GetErrors(string propertyName)
@@ -160,6 +160,21 @@ namespace ZaliczenieWF.Core.Models
         }
 
         public override string ToString() => Name;
+
+        public override bool Equals(object obj)
+        {
+            return obj is Participant part && Equals(part);
+        }
+
+        public override int GetHashCode()
+        {
+            return PESEL.GetHashCode();
+        }
+
+        public bool Equals(Participant other)
+        {
+            return string.Equals(other.PESEL, PESEL, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }
 

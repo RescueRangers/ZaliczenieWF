@@ -13,6 +13,7 @@ using ZaliczenieWF.Core.Services;
 using MvvmCross.Navigation;
 using System.Globalization;
 using System.Threading;
+using System.Linq;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
@@ -96,7 +97,20 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
         private async Task ShowReceivedScoreAsync(Score score)
         {
-            Score result = await _navigationService.Navigate<ScoreReceivedViewModel, Score, Score>(score);
+            Participant result = await _navigationService.Navigate<ScoreReceivedViewModel, Score, Participant>(score);
+
+            if (result == null)
+                return;
+
+            if (Participants.Contains(result))
+            {
+                var index = Participants.IndexOf(result);
+                Participants[index] = result;
+            }
+            else
+            {
+                Participants.Add(result);
+            }
         }
 
         private async Task AddNewParticipantAsync()

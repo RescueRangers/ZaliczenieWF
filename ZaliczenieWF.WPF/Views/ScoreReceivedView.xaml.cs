@@ -23,8 +23,8 @@ namespace ZaliczenieWF.WPF.Views
     /// </summary>
     ///
     [MvxViewFor(typeof(ScoreReceivedViewModel))]
-    [MvxWindowPresentation(Identifier = nameof(ScoreReceivedView), Modal = true)]
-    public partial class ScoreReceivedView : MvxWindow
+    [MvxContentPresentation(WindowIdentifier = nameof(ScoreReceivedView))]
+    public partial class ScoreReceivedView
     {
         public ScoreReceivedView()
         {

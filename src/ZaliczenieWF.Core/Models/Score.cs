@@ -5,7 +5,7 @@ using ZaliczenieWF.Core.Services;
 
 namespace ZaliczenieWF.Core.Models
 {
-    public class Score
+    public class Score : IEquatable<Score>
     {
         public Participant Participant { get; set; }
         public Competition  Competition { get; set; }
@@ -28,6 +28,20 @@ namespace ZaliczenieWF.Core.Models
         private string GetCompetition()
         {
             return Competition.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Score score && Equals(score);
+        }
+        public override int GetHashCode()
+        {
+            return Competition.GetHashCode();
+        }
+
+        public bool Equals(Score other)
+        {
+            return Competition == other.Competition;
         }
     }
 }

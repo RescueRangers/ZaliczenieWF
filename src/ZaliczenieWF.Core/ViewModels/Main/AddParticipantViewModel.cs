@@ -66,7 +66,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
         private async Task Submit()
         {
-            _navigationService.Close(this, EditingParticipant);
+            await _navigationService.Close(this, EditingParticipant);
         }
 
         public override void Prepare(Participant parameter)

@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MvvmCross.Commands;
+using MvvmCross.Navigation;
+using ZaliczenieWF.Core.Models;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
-    public class ModalViewModel : BaseViewModel<string>
+    public class ModalViewModel : BaseViewModel<string, UserResponse>
     {
         private string _message;
+        private IMvxNavigationService _navigationService;
 
         public string Message
         {
@@ -18,9 +22,23 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             }
         }
 
+        public ModalViewModel(IMvxNavigationService navigationService)
+        {
+            _navigationService = navigationService;
+        }
+
         public override void Prepare(string parameter)
         {
             Message = parameter;
+            CancelCommand = new MvxCommand(() => _navigationService.Close(this));
+            SubmitCommand = new MvxAsyncCommand(async () =>
+            {
+                var result = new UserResponse { OverwriteScore = true };
+                await _navigationService.Close(this, result);
+            });
         }
+
+        public IMvxAsyncCommand SubmitCommand { get; set; }
+        public IMvxCommand CancelCommand { get; set; }
     }
 }
