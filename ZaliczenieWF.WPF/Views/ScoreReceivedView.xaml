@@ -15,26 +15,41 @@
     <DockPanel Margin="10" LastChildFill="True">
         <StackPanel DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal">
-                <Label Content="Otrzymano wynik: " />
+                <Label
+                    Content="Otrzymano wynik: "
+                    FontSize="14"
+                    FontWeight="Bold" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="Red"
                     Text="{Binding Score.ScoreString}" />
-                <Label Content="z konkurencji:" />
+                <Label
+                    Content="z konkurencji:"
+                    FontSize="14"
+                    FontWeight="Bold" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="Red"
                     Text="{Binding Score.CompetitionString}" />
             </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <Label Content="Prosze wybrac zawodnika z listy lub dodac nowego." />
-                <Grid>
+            <StackPanel Margin="5" Orientation="Vertical">
+                <Label
+                    Content="Prosze wybrac zawodnika z listy lub dodać nowego."
+                    FontSize="14"
+                    FontWeight="Bold" Margin="0 5"/>
+                <Grid Margin="0 10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width="155" />
+                        <ColumnDefinition Width="185" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="55" />
+                        <RowDefinition Height="65" />
                     </Grid.RowDefinitions>
                     <syncfusion:SfTextInputLayout Grid.Column="0" Hint="Zawodnicy">
                         <ComboBox ItemsSource="{Binding Participants}" SelectedItem="{Binding SelectedParticipant}" />
@@ -43,11 +58,11 @@
                         Grid.Column="1"
                         Width="150"
                         Height="35"
-                        Margin="5,0,0,10"
+                        Margin="30,0,0,20"
                         HorizontalAlignment="Center"
                         BorderThickness="0"
                         Command="{Binding AddParticipantCommand}"
-                        Content="Dodaj" />
+                        Content="Nowy zawodnik" />
                 </Grid>
 
             </StackPanel>

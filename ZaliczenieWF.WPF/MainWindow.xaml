@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ZaliczenieWF.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
-    Title="MainWindow"
+    Title="WF"
     MinWidth="990"
     MinHeight="450"
     Width="990"
