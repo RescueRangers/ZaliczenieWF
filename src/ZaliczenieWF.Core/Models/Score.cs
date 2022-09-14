@@ -9,7 +9,7 @@ namespace ZaliczenieWF.Core.Models
     {
         public Participant Participant { get; set; }
         public Competition  Competition { get; set; }
-        public TimeSpan Time { get; set; }
+        public double Time { get; set; }
         public int Quantity { get; set; }
         public List<Participant> Participants { get; set; }
 
@@ -22,7 +22,7 @@ namespace ZaliczenieWF.Core.Models
             {
                 return Quantity.ToString();
             }
-            return Time.ToString("mm:ss");
+            return Time.ToString();
         }
 
         private string GetCompetition()

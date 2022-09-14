@@ -82,7 +82,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             }
             else
             {
-                if (TimeSpan.TryParse(e.Score, CultureInfo.InvariantCulture, out TimeSpan time))
+                if (double.TryParse(e.Score, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out double time))
                 {
                     score = new Score { Competition = e.Competition, Time = time, Participants = new List<Participant>(Participants) };
                 }

@@ -70,6 +70,7 @@ namespace ZaliczenieWF.Core.Models
             Stopien += "";
             Kolumna += "";
             JednostkaWojskowa += "";
+            PESEL += "";
         }
 
         public string Stopien
