@@ -13,14 +13,16 @@ namespace ZaliczenieWF.Core.Services{
                 switch (score.Competition)
                 {
                     case Competition._10x10:
-                        calculatedScore += Calculate10x10Score(score, age);
+                        score.CalculatedScore = Calculate10x10Score(score, age);
                         break;
                     case Competition.Brzuszki:
-                        calculatedScore += CalculateBrzuszkiScore(score, age);
+                        score.CalculatedScore = CalculateBrzuszkiScore(score, age);
                         break;
                     case Competition.Podciaganie:
+                        score.CalculatedScore = CalculatePodciagnieciaScore(score, age);
                         break;
                     case Competition.Marszobieg:
+                        score.CalculatedScore = CalculateMarszobiegScore(score, age);
                         break;
                     case Competition.Null:
                         break;
@@ -29,6 +31,121 @@ namespace ZaliczenieWF.Core.Services{
                 }
             }
 
+            return calculatedScore;
+        }
+
+        private double CalculatePodciagnieciaScore(Score score, int age)
+        {
+            var bracket = CalculateAgeBracket(age);
+            var maxScore = 21;
+            var minScore = 7.4;
+            double startingValue = 0;
+
+            switch (bracket)
+            {
+                case 1:
+                    startingValue = 15;
+                    minScore = 9.8;
+                    break;
+                case 2:
+                    startingValue = 18;
+                    minScore = 7.4;
+                    break;
+                case 3:
+                    startingValue = 16;
+                    minScore = 9;
+                    break;
+                case 4:
+                    startingValue = 14;
+                    minScore = 10.6;
+                    break;
+                case 5:
+                    startingValue = 12;
+                    minScore = 12.2;
+                    break;
+                case 6:
+                    startingValue = 10;
+                    minScore = 13.8;
+                    break;
+                case 7:
+                    startingValue = 8;
+                    minScore = 15.4;
+                    break;
+                case 8:
+                    startingValue = 7;
+                    minScore = 16.2;
+                    break;
+                case 9:
+                    startingValue = 6;
+                    minScore = 17;
+                    break;
+                default:
+                    break;
+            }
+
+            return score.Quantity > startingValue
+                ? maxScore
+                : score.Quantity == 1 ? minScore : score.Quantity < 1 ? 0 : maxScore - (startingValue - score.Quantity) * 0.8;
+
+        }
+
+        private double CalculateMarszobiegScore(Score score, int age)
+        {
+            var bracket = CalculateAgeBracket(age);
+            var maxScore = 44;
+            var minScore = 0.1;
+            double startingValue = 0;
+            var steps = Math.Floor(score.Time / 5);
+
+            switch (bracket)
+            {
+                case 1:
+                    startingValue = 750 / 5;
+                    break;
+                case 2:
+                    startingValue = 720 / 5;
+                    break;
+                case 3:
+                    startingValue = 735 / 5;
+                    break;
+                case 4:
+                    startingValue = 750 / 5;
+                    break;
+                case 5:
+                    startingValue = 790 / 5;
+                    break;
+                case 6:
+                    startingValue = 850 / 5;
+                    break;
+                case 7:
+                    startingValue = 910 / 5;
+                    break;
+                case 8:
+                    startingValue = 970 / 5;
+                    break;
+                case 9:
+                    startingValue = 1030 / 5;
+                    minScore = 0.4;
+                    break;
+                default:
+                    break;
+            }
+
+            if (steps < 144)
+                return maxScore;
+
+            var offset = steps - startingValue;
+            if (offset > 65)
+            {
+                maxScore = 18;
+                offset -= 65;
+            }
+
+            var calculatedScore = maxScore - (offset * 0.4);
+            if (calculatedScore <= 0)
+            {
+                calculatedScore = minScore;
+            }
             return calculatedScore;
         }
 
