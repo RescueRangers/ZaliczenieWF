@@ -57,6 +57,8 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         {
             if (SelectedParticipant == null)
                 return;
+            _scoreService.CalculateScores(SelectedParticipant);
+            _navigationService.Navigate<ScoreCardViewModel, Participant>(SelectedParticipant);
         }
 
         private void OnSerialConnection(object sender, SerialConnectionEventArgs e)

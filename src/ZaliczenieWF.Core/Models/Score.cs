@@ -14,6 +14,7 @@ namespace ZaliczenieWF.Core.Models
         public List<Participant> Participants { get; set; }
 
         public double CalculatedScore { get; set; }
+        public bool Passed { get; set; } = true;
 
         public string ScoreString => GetScore();
         public string CompetitionString => GetCompetition();

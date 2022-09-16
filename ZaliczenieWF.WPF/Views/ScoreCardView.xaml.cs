@@ -10,30 +10,26 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MvvmCross.Platforms.Wpf.Presenters.Attributes;
 using MvvmCross.Platforms.Wpf.Views;
+using MvvmCross.ViewModels;
+using ZaliczenieWF.Core.ViewModels.Main;
 
 namespace ZaliczenieWF.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for AddParticipantView.xaml
+    /// Interaction logic for ScoreCardView.xaml
     /// </summary>
     ///
-    [MvxWindowPresentation(Identifier = nameof(AddParticipantView), Modal = true)]
-    public partial class AddParticipantView : MvxWindow
+    [MvxContentPresentation]
+    [MvxViewFor(typeof(ScoreCardViewModel))]
+    public partial class ScoreCardView
     {
-        public AddParticipantView()
+        public ScoreCardView()
         {
             InitializeComponent();
-        }
-
-        private void TextBox_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (sender is TextBox textBox)
-            {
-                textBox.Focus();
-            }
         }
     }
 }

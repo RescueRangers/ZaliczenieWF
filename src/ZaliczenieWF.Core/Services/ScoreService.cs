@@ -7,7 +7,20 @@ namespace ZaliczenieWF.Core.Services{
         public double CalculateScores(Participant participant)
         {
             double calculatedScore = 0;
-            var age = DateTime.Now.Year - (int.Parse(participant.PESEL.Substring(0, 4)));
+            int[] peselNumber = GetPeselNumber(participant.PESEL);
+
+            var yearOfBirth = 1900 + peselNumber[0] * 10 + peselNumber[1];
+            if (peselNumber[2] >= 2 && peselNumber[2] < 8)
+            {
+                double year = peselNumber[2] / 2;
+                yearOfBirth += (int)(Math.Floor(year) * 100);
+            }
+            if(peselNumber[2] >=8)
+            {
+                yearOfBirth -= 100;
+            }
+
+            var age = DateTime.Now.Year - yearOfBirth;
             foreach (Score score in participant.Scores)
             {
                 switch (score.Competition)
@@ -32,6 +45,18 @@ namespace ZaliczenieWF.Core.Services{
             }
 
             return calculatedScore;
+        }
+
+        private int[] GetPeselNumber(string pESEL)
+        {
+            int[] peselNumber = new int[11];
+
+            for (var i = 0; i < pESEL.Length; i++)
+            {
+                peselNumber[i] = int.Parse(pESEL[i].ToString());
+            }
+
+            return peselNumber;
         }
 
         private double CalculatePodciagnieciaScore(Score score, int age)
@@ -155,50 +180,64 @@ namespace ZaliczenieWF.Core.Services{
             var maxScore = 21;
             double startingValue = 0;
             double minScore = 0;
+            double passingScore = 0;
 
             switch (bracket)
             {
                 case 1:
                     startingValue = 65;
                     minScore = 2.8;
+                    passingScore = 10.8;
                     break;
                 case 2:
                     startingValue = 74;
                     minScore = 0.1;
+                    passingScore = 10.8;
                     break;
                 case 3:
                     startingValue = 70;
                     minScore = 1.3;
+                    passingScore = 10.5;
                     break;
                 case 4:
                     startingValue = 65;
                     minScore = 2.8;
+                    passingScore = 10.8;
                     break;
                 case 5:
                     startingValue = 60;
                     minScore = 3.3;
+                    passingScore = 10.8;
                     break;
                 case 6:
                     startingValue = 54;
                     minScore = 5.1;
+                    passingScore = 10.8;
                     break;
                 case 7:
                     startingValue = 48;
                     minScore = 6.9;
+                    passingScore = 10.8;
                     break;
                 case 8:
                     startingValue = 42;
                     minScore = 8.7;
+                    passingScore = 10.8;
                     break;
                 case 9:
                     startingValue = 36;
                     minScore = 10.5;
+                    passingScore = 10.8;
                     break;
                 default:
                     break;
             }
 
-            var calculatedScore = (startingValue - score.Quantity) * 0.3;
+            var calculatedScore = maxScore - (startingValue - score.Quantity) * 0.3;
+            if (calculatedScore <= passingScore)
+            {
+                score.Passed = false;
+            }
 
             return calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : calculatedScore;
         }
