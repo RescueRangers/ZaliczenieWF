@@ -11,14 +11,6 @@ using ZaliczenieWF.Core.Events;
 
 namespace ZaliczenieWF.Core.Services
 {
-    public enum Competition
-    {
-        _10x10 = 1,
-        Brzuszki = 2,
-        Podciaganie = 3,
-        Marszobieg = 4,
-        Null = 5
-    }
     internal class CommsService : ICommsService
     {
         

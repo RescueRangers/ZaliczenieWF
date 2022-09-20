@@ -9,8 +9,8 @@ namespace ZaliczenieWF.Core.Models
     {
         public Participant Participant { get; set; }
         public Competition  Competition { get; set; }
-        public double Time { get; set; }
-        public int Quantity { get; set; }
+        public double? Time { get; set; }
+        public int? Quantity { get; set; }
         public List<Participant> Participants { get; set; }
 
         public double CalculatedScore { get; set; }
@@ -25,7 +25,7 @@ namespace ZaliczenieWF.Core.Models
             {
                 return Quantity.ToString();
             }
-            return $"{Time}s";
+            return $"{Time / 1000}s";
         }
 
         private string GetCompetition()

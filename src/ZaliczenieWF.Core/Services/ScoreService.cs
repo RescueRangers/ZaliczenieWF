@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Reflection;
 using ZaliczenieWF.Core.Models;
 
 namespace ZaliczenieWF.Core.Services{
@@ -64,6 +66,7 @@ namespace ZaliczenieWF.Core.Services{
             var bracket = CalculateAgeBracket(age);
             var maxScore = 21;
             var minScore = 7.4;
+            double minPassingScore = 0;
             double startingValue = 0;
 
             switch (bracket)
@@ -71,46 +74,58 @@ namespace ZaliczenieWF.Core.Services{
                 case 1:
                     startingValue = 15;
                     minScore = 9.8;
+                    minPassingScore = 10.6;
                     break;
                 case 2:
                     startingValue = 18;
                     minScore = 7.4;
+                    minPassingScore = 9;
                     break;
                 case 3:
                     startingValue = 16;
                     minScore = 9;
+                    minPassingScore = 9.8;
                     break;
                 case 4:
                     startingValue = 14;
                     minScore = 10.6;
+                    minPassingScore = 11.4;
                     break;
                 case 5:
                     startingValue = 12;
                     minScore = 12.2;
+                    minPassingScore = 13;
                     break;
                 case 6:
                     startingValue = 10;
                     minScore = 13.8;
+                    minPassingScore = 14.6;
                     break;
                 case 7:
                     startingValue = 8;
                     minScore = 15.4;
+                    minPassingScore = 16.2;
                     break;
                 case 8:
                     startingValue = 7;
                     minScore = 16.2;
+                    minPassingScore = 17;
                     break;
                 case 9:
                     startingValue = 6;
                     minScore = 17;
+                    minPassingScore = 17.2;
                     break;
                 default:
                     break;
             }
 
-            return score.Quantity > startingValue
+            var calculatedScore = score.Quantity.Value > startingValue
                 ? maxScore
-                : score.Quantity == 1 ? minScore : score.Quantity < 1 ? 0 : maxScore - (startingValue - score.Quantity) * 0.8;
+                : score.Quantity.Value == 1 ? minScore : score.Quantity.Value < 1 ? 0 : maxScore - (startingValue - score.Quantity.Value) * 0.8;
+            if (calculatedScore < minPassingScore)
+                score.Passed = false;
+            return calculatedScore;
 
         }
 
@@ -119,8 +134,9 @@ namespace ZaliczenieWF.Core.Services{
             var bracket = CalculateAgeBracket(age);
             var maxScore = 44;
             var minScore = 0.1;
+            double minPassingScore = 26;
             double startingValue = 0;
-            var steps = Math.Floor(score.Time / 5);
+            var steps = Math.Floor((score.Time.Value / 1000) / 5);
 
             switch (bracket)
             {
@@ -171,81 +187,76 @@ namespace ZaliczenieWF.Core.Services{
             {
                 calculatedScore = minScore;
             }
+
+            if (calculatedScore < minPassingScore)
+                score.Passed = false;
             return calculatedScore;
         }
 
         private double CalculateBrzuszkiScore(Score score, int age)
         {
             var bracket = CalculateAgeBracket(age);
-            var maxScore = 21;
+            var maxScore = 16;
             double startingValue = 0;
             double minScore = 0;
-            double passingScore = 0;
+            double minPassingScore = 10;
 
             switch (bracket)
             {
                 case 1:
-                    startingValue = 65;
-                    minScore = 2.8;
-                    passingScore = 10.8;
+                    startingValue = 70;
+                    minScore = 2.2;
                     break;
                 case 2:
-                    startingValue = 74;
-                    minScore = 0.1;
-                    passingScore = 10.8;
+                    startingValue = 80;
+                    minScore = 0.2;
                     break;
                 case 3:
-                    startingValue = 70;
-                    minScore = 1.3;
-                    passingScore = 10.5;
+                    startingValue = 75;
+                    minScore = 1.2;
                     break;
                 case 4:
-                    startingValue = 65;
-                    minScore = 2.8;
-                    passingScore = 10.8;
+                    startingValue = 70;
+                    minScore = 2.2;
                     break;
                 case 5:
-                    startingValue = 60;
-                    minScore = 3.3;
-                    passingScore = 10.8;
+                    startingValue = 65;
+                    minScore = 3.2;
                     break;
                 case 6:
-                    startingValue = 54;
-                    minScore = 5.1;
-                    passingScore = 10.8;
+                    startingValue = 60;
+                    minScore = 4.2;
                     break;
                 case 7:
-                    startingValue = 48;
-                    minScore = 6.9;
-                    passingScore = 10.8;
+                    startingValue = 55;
+                    minScore = 5.2;
                     break;
                 case 8:
-                    startingValue = 42;
-                    minScore = 8.7;
-                    passingScore = 10.8;
+                    startingValue = 49;
+                    minScore = 6.4;
                     break;
                 case 9:
-                    startingValue = 36;
-                    minScore = 10.5;
-                    passingScore = 10.8;
+                    startingValue = 45;
+                    minScore = 7.2;
                     break;
                 default:
                     break;
             }
 
-            var calculatedScore = maxScore - (startingValue - score.Quantity) * 0.3;
-            if (calculatedScore <= passingScore)
+            var calculatedScore = maxScore - (startingValue - score.Quantity) * 0.2;
+            if (calculatedScore < minPassingScore)
             {
                 score.Passed = false;
             }
 
-            return calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : calculatedScore;
+            return (double)(calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : calculatedScore);
         }
 
         private double Calculate10x10Score(Score score, int age)
         {
             var bracket = CalculateAgeBracket(age);
             double startingValue = 0;
+            double minPassingScore = 2.2;
 
             switch (bracket)
             {
@@ -280,8 +291,10 @@ namespace ZaliczenieWF.Core.Services{
                     break;
             }
 
-            var time = Math.Round(score.Time, 1);
+            var time = Math.Round(score.Time.Value / 1000, 1);
             var calculatedScore = 19 - ((time - startingValue) * 4);
+            if (calculatedScore < minPassingScore)
+                score.Passed = false;
 
             return calculatedScore < 0 ? 0 : calculatedScore > 19 ? 19 : calculatedScore;
         }
@@ -322,6 +335,8 @@ namespace ZaliczenieWF.Core.Services{
             }
             return 9;
         }
+
+        
     }
 }
 

@@ -1,14 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using MvvmCross;
+using ZaliczenieWF.Core.ViewModels;
 
 namespace ZaliczenieWF.Core.Models
 {
 
-    public class Participant : INotifyDataErrorInfo, IEquatable<Participant>
+    public class Participant : BaseViewModel, INotifyDataErrorInfo, IEquatable<Participant>
     {
         private void ValidateProperty(string property)
         {
@@ -121,7 +123,15 @@ namespace ZaliczenieWF.Core.Models
             }
         }
         public string Ocena { get; set; }
-        public List<Score> Scores { get; set; } = new List<Score>();
+        public ObservableCollection<Score> Scores
+        {
+            get => _scores;
+            set
+            {
+                _scores = value;
+                RaisePropertyChanged(nameof(Scores));
+            }
+        }
         public string Errors => GetErrors();
 
         private string GetErrors()
@@ -145,6 +155,7 @@ namespace ZaliczenieWF.Core.Models
         private string _pESEL;
         private string _kolumna;
         private string _jednostkaWojskowa;
+        private ObservableCollection<Score> _scores = new ObservableCollection<Score>();
 
         public bool HasErrors => _errorsByPropertyName.Any();
 
