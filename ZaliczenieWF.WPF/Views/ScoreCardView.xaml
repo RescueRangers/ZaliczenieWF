@@ -82,29 +82,33 @@
                 FontFamily="Verdana"
                 FontSize="16" />
         </Grid>
-        <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Width="300"
-            Height="35"
-            HorizontalAlignment="Center"
-            BorderThickness="0"
-            Command="{Binding AddCompetitionCommand}"
-            Content="Dodaj wynik" />
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button
+                Width="250"
+                Height="35"
+                Margin="0 0 20 0"
+                Command="{Binding GenerateReportCommand}"
+                Content="Generuj karte sprawności fizycznej" />
+            <Button
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="250"
+                Margin="20 0 0 0"
+                Height="35"
+                HorizontalAlignment="Center"
+                BorderThickness="0"
+                Command="{Binding AddCompetitionCommand}"
+                Content="Dodaj wynik" />
 
-        <DataGrid
-            Visibility="Collapsed"
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            ItemsSource="{Binding Participant.Scores}" />
+        </StackPanel>
 
         <syncfusion:SfDataGrid
-            Visibility="Visible"
             Grid.Row="1"
             Grid.ColumnSpan="2"
             AllowDeleting="True"
             AutoGenerateColumns="False"
-            ItemsSource="{Binding Participant.Scores}">
+            ItemsSource="{Binding Participant.Scores}"
+            Visibility="Visible">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn
                     HeaderText="Konkurencja"

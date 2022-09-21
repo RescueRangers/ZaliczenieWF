@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 using ZaliczenieWF.Core.Services;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
@@ -18,11 +18,13 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         private Participant _participant;
         private IMvxNavigationService _navigationService;
         private IScoreService _scoreService;
+        private IReportService _reportService;
 
-        public ScoreCardViewModel(IMvxNavigationService navigationService, IScoreService scoreService)
+        public ScoreCardViewModel(IMvxNavigationService navigationService, IScoreService scoreService, IReportService reportService)
         {
             _navigationService = navigationService;
             _scoreService = scoreService;
+            _reportService = reportService;
         }
 
         public override void Prepare(Participant parameter)
@@ -34,6 +36,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         {
             BackCommand = new MvxCommand(() => _navigationService.Close(this));
             AddCompetitionCommand = new MvxAsyncCommand(async () => await AddCompetitionAsync());
+            GenerateReportCommand = new MvxCommand(() => _reportService.GeneratePdfReport(Participant));
         }
 
         private async Task AddCompetitionAsync()
@@ -76,5 +79,6 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
         public IMvxCommand BackCommand { get; set; }
         public IMvxAsyncCommand AddCompetitionCommand { get; set; }
+        public IMvxCommand GenerateReportCommand { get; set; }
     }
 }

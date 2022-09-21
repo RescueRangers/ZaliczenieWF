@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using ZaliczenieWF.Core.Services;
+using ZaliczenieWF.Models.Extensions;
 
-namespace ZaliczenieWF.Core.Models
+namespace ZaliczenieWF.Models
 {
     public class Score : IEquatable<Score>
     {
@@ -17,7 +17,7 @@ namespace ZaliczenieWF.Core.Models
         public bool Passed { get; set; } = true;
 
         public string ScoreString => GetScore();
-        public string CompetitionString => GetCompetition();
+        public string CompetitionString => Competition.GetDescription();
 
         private string GetScore()
         {
@@ -28,10 +28,7 @@ namespace ZaliczenieWF.Core.Models
             return $"{Time / 1000}s";
         }
 
-        private string GetCompetition()
-        {
-            return Competition.ToString();
-        }
+        public double MinPassingScore { get; set; }
 
         public override bool Equals(object obj)
         {

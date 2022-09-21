@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 using ZaliczenieWF.Core.Services;
 
 namespace ZaliczenieWF.Core.ViewModels.Main

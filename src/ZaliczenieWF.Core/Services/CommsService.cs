@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using RJCP.IO.Ports;
 using ZaliczenieWF.Core.Events;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.Services
 {

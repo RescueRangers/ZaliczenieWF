@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZaliczenieWF.Core.Models
+namespace ZaliczenieWF.Models
 {
     public class UserResponse
     {

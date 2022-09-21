@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace ZaliczenieWF.Core.Services
+namespace ZaliczenieWF.Models
 {
     public enum Competition
     {

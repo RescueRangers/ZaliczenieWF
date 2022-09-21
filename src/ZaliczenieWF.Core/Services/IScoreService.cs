@@ -1,4 +1,4 @@
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.Services
 {

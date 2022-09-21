@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.Services{
     public class ScoreService : IScoreService
@@ -21,23 +21,24 @@ namespace ZaliczenieWF.Core.Services{
             {
                 yearOfBirth -= 100;
             }
-
             var age = DateTime.Now.Year - yearOfBirth;
+            participant.AgeGroup = CalculateAgeBracket(age);
+
             foreach (Score score in participant.Scores)
             {
                 switch (score.Competition)
                 {
                     case Competition._10x10:
-                        score.CalculatedScore = Calculate10x10Score(score, age);
+                        score.CalculatedScore = Calculate10x10Score(score, participant.AgeGroup);
                         break;
                     case Competition.Brzuszki:
-                        score.CalculatedScore = CalculateBrzuszkiScore(score, age);
+                        score.CalculatedScore = CalculateBrzuszkiScore(score, participant.AgeGroup);
                         break;
                     case Competition.Podciaganie:
-                        score.CalculatedScore = CalculatePodciagnieciaScore(score, age);
+                        score.CalculatedScore = CalculatePodciagnieciaScore(score, participant.AgeGroup);
                         break;
                     case Competition.Marszobieg:
-                        score.CalculatedScore = CalculateMarszobiegScore(score, age);
+                        score.CalculatedScore = CalculateMarszobiegScore(score, participant.AgeGroup);
                         break;
                     case Competition.Null:
                         break;
@@ -46,7 +47,7 @@ namespace ZaliczenieWF.Core.Services{
                 }
             }
 
-            return calculatedScore;
+            return Math.Round(calculatedScore, 1);
         }
 
         private int[] GetPeselNumber(string pESEL)
@@ -61,60 +62,58 @@ namespace ZaliczenieWF.Core.Services{
             return peselNumber;
         }
 
-        private double CalculatePodciagnieciaScore(Score score, int age)
+        private double CalculatePodciagnieciaScore(Score score, AgeGroup age)
         {
-            var bracket = CalculateAgeBracket(age);
             var maxScore = 21;
             var minScore = 7.4;
-            double minPassingScore = 0;
             double startingValue = 0;
 
-            switch (bracket)
+            switch (age)
             {
-                case 1:
+                case AgeGroup._20:
                     startingValue = 15;
                     minScore = 9.8;
-                    minPassingScore = 10.6;
+                    score.MinPassingScore = 10.6;
                     break;
-                case 2:
+                case AgeGroup._21_25:
                     startingValue = 18;
                     minScore = 7.4;
-                    minPassingScore = 9;
+                    score.MinPassingScore = 9;
                     break;
-                case 3:
+                case AgeGroup._26_30:
                     startingValue = 16;
                     minScore = 9;
-                    minPassingScore = 9.8;
+                    score.MinPassingScore = 9.8;
                     break;
-                case 4:
+                case AgeGroup._31_35:
                     startingValue = 14;
                     minScore = 10.6;
-                    minPassingScore = 11.4;
+                    score.MinPassingScore = 11.4;
                     break;
-                case 5:
+                case AgeGroup._36_40:
                     startingValue = 12;
                     minScore = 12.2;
-                    minPassingScore = 13;
+                    score.MinPassingScore = 13;
                     break;
-                case 6:
+                case AgeGroup._41_45:
                     startingValue = 10;
                     minScore = 13.8;
-                    minPassingScore = 14.6;
+                    score.MinPassingScore = 14.6;
                     break;
-                case 7:
+                case AgeGroup._46_50:
                     startingValue = 8;
                     minScore = 15.4;
-                    minPassingScore = 16.2;
+                    score.MinPassingScore = 16.2;
                     break;
-                case 8:
+                case AgeGroup._51_55:
                     startingValue = 7;
                     minScore = 16.2;
-                    minPassingScore = 17;
+                    score.MinPassingScore = 17;
                     break;
-                case 9:
+                case AgeGroup._56:
                     startingValue = 6;
                     minScore = 17;
-                    minPassingScore = 17.2;
+                    score.MinPassingScore = 17.2;
                     break;
                 default:
                     break;
@@ -123,48 +122,47 @@ namespace ZaliczenieWF.Core.Services{
             var calculatedScore = score.Quantity.Value > startingValue
                 ? maxScore
                 : score.Quantity.Value == 1 ? minScore : score.Quantity.Value < 1 ? 0 : maxScore - (startingValue - score.Quantity.Value) * 0.8;
-            if (calculatedScore < minPassingScore)
+            if (calculatedScore < score.MinPassingScore)
                 score.Passed = false;
-            return calculatedScore;
+            return Math.Round(calculatedScore, 1);
 
         }
 
-        private double CalculateMarszobiegScore(Score score, int age)
+        private double CalculateMarszobiegScore(Score score, AgeGroup age)
         {
-            var bracket = CalculateAgeBracket(age);
             var maxScore = 44;
             var minScore = 0.1;
-            double minPassingScore = 26;
+            score.MinPassingScore = 26;
             double startingValue = 0;
             var steps = Math.Floor((score.Time.Value / 1000) / 5);
 
-            switch (bracket)
+            switch (age)
             {
-                case 1:
+                case AgeGroup._20:
                     startingValue = 750 / 5;
                     break;
-                case 2:
+                case AgeGroup._21_25:
                     startingValue = 720 / 5;
                     break;
-                case 3:
+                case AgeGroup._26_30:
                     startingValue = 735 / 5;
                     break;
-                case 4:
+                case AgeGroup._31_35:
                     startingValue = 750 / 5;
                     break;
-                case 5:
+                case AgeGroup._36_40:
                     startingValue = 790 / 5;
                     break;
-                case 6:
+                case AgeGroup._41_45:
                     startingValue = 850 / 5;
                     break;
-                case 7:
+                case AgeGroup._46_50:
                     startingValue = 910 / 5;
                     break;
-                case 8:
+                case AgeGroup._51_55:
                     startingValue = 970 / 5;
                     break;
-                case 9:
+                case AgeGroup._56:
                     startingValue = 1030 / 5;
                     minScore = 0.4;
                     break;
@@ -188,54 +186,53 @@ namespace ZaliczenieWF.Core.Services{
                 calculatedScore = minScore;
             }
 
-            if (calculatedScore < minPassingScore)
+            if (calculatedScore < score.MinPassingScore)
                 score.Passed = false;
-            return calculatedScore;
+            return Math.Round(calculatedScore, 1);
         }
 
-        private double CalculateBrzuszkiScore(Score score, int age)
+        private double CalculateBrzuszkiScore(Score score, AgeGroup age)
         {
-            var bracket = CalculateAgeBracket(age);
             var maxScore = 16;
             double startingValue = 0;
             double minScore = 0;
-            double minPassingScore = 10;
+            score.MinPassingScore = 10;
 
-            switch (bracket)
+            switch (age)
             {
-                case 1:
+                case AgeGroup._20:
                     startingValue = 70;
                     minScore = 2.2;
                     break;
-                case 2:
+                case AgeGroup._21_25:
                     startingValue = 80;
                     minScore = 0.2;
                     break;
-                case 3:
+                case AgeGroup._26_30:
                     startingValue = 75;
                     minScore = 1.2;
                     break;
-                case 4:
+                case AgeGroup._31_35:
                     startingValue = 70;
                     minScore = 2.2;
                     break;
-                case 5:
+                case AgeGroup._36_40:
                     startingValue = 65;
                     minScore = 3.2;
                     break;
-                case 6:
+                case AgeGroup._41_45:
                     startingValue = 60;
                     minScore = 4.2;
                     break;
-                case 7:
+                case AgeGroup._46_50:
                     startingValue = 55;
                     minScore = 5.2;
                     break;
-                case 8:
+                case AgeGroup._51_55:
                     startingValue = 49;
                     minScore = 6.4;
                     break;
-                case 9:
+                case AgeGroup._56:
                     startingValue = 45;
                     minScore = 7.2;
                     break;
@@ -243,48 +240,47 @@ namespace ZaliczenieWF.Core.Services{
                     break;
             }
 
-            var calculatedScore = maxScore - (startingValue - score.Quantity) * 0.2;
-            if (calculatedScore < minPassingScore)
+            var calculatedScore = maxScore - (startingValue - score.Quantity.Value) * 0.2;
+            if (calculatedScore < score.MinPassingScore)
             {
                 score.Passed = false;
             }
 
-            return (double)(calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : calculatedScore);
+            return calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : Math.Round(calculatedScore, 1);
         }
 
-        private double Calculate10x10Score(Score score, int age)
+        private double Calculate10x10Score(Score score, AgeGroup age)
         {
-            var bracket = CalculateAgeBracket(age);
             double startingValue = 0;
-            double minPassingScore = 2.2;
+            score.MinPassingScore = 2.2;
 
-            switch (bracket)
+            switch (age)
             {
-                case 1:
+                case AgeGroup._20:
                     startingValue = 29;
                     break;
-                case 2:
+                case AgeGroup._21_25:
                     startingValue = 28.6;
                     break;
-                case 3:
+                case AgeGroup._26_30:
                     startingValue = 28.9;
                     break;
-                case 4:
+                case AgeGroup._31_35:
                     startingValue = 29.2;
                     break;
-                case 5:
+                case AgeGroup._36_40:
                     startingValue = 29.5;
                     break;
-                case 6:
+                case AgeGroup._41_45:
                     startingValue = 30.1;
                     break;
-                case 7:
+                case AgeGroup._46_50:
                     startingValue = 30.4;
                     break;
-                case 8:
+                case AgeGroup._51_55:
                     startingValue = 30.7;
                     break;
-                case 9:
+                case AgeGroup._56:
                     startingValue = 31.7;
                     break;
                 default:
@@ -293,47 +289,47 @@ namespace ZaliczenieWF.Core.Services{
 
             var time = Math.Round(score.Time.Value / 1000, 1);
             var calculatedScore = 19 - ((time - startingValue) * 4);
-            if (calculatedScore < minPassingScore)
+            if (calculatedScore < score.MinPassingScore)
                 score.Passed = false;
 
-            return calculatedScore < 0 ? 0 : calculatedScore > 19 ? 19 : calculatedScore;
+            return calculatedScore < 0 ? 0 : calculatedScore > 19 ? 19 : Math.Round(calculatedScore, 1);
         }
 
-        private int CalculateAgeBracket(int age)
+        private AgeGroup CalculateAgeBracket(int age)
         {
             if (age <= 20)
             {
-                return 1;
+                return AgeGroup._20;
             }
             if (age <= 25)
             {
-                return 2;
+                return AgeGroup._21_25;
             }
             if (age <= 30)
             {
-                return 3;
+                return AgeGroup._26_30;
             }
             if (age <= 35)
             {
-                return 4;
+                return AgeGroup._31_35;
             }
             if (age <= 40)
             {
-                return 5;
+                return AgeGroup._36_40;
             }
             if (age <= 45)
             {
-                return 6;
+                return AgeGroup._41_45;
             }
             if (age <= 50)
             {
-                return 7;
+                return AgeGroup._46_50;
             }
             if (age <= 55)
             {
-                return 8;
+                return AgeGroup._51_55;
             }
-            return 9;
+            return AgeGroup._56;
         }
 
         

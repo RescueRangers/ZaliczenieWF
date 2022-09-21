@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 using ZaliczenieWF.WPF.Extensions;
 
 namespace ZaliczenieWF.WPF.Converters

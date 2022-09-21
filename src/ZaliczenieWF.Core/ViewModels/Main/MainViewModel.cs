@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using MvvmCross;
 using MvvmCross.Commands;
 using ZaliczenieWF.Core.Events;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 using ZaliczenieWF.Core.Services;
 using MvvmCross.Navigation;
 using System.Globalization;

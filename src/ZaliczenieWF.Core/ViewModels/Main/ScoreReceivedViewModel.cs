@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ZaliczenieWF.Core.Models;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {

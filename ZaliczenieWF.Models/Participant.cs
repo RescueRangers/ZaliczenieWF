@@ -4,13 +4,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using MvvmCross;
-using ZaliczenieWF.Core.ViewModels;
+using ZaliczenieWF.Models.Extensions;
 
-namespace ZaliczenieWF.Core.Models
+namespace ZaliczenieWF.Models
 {
 
-    public class Participant : BaseViewModel, INotifyDataErrorInfo, IEquatable<Participant>
+    public class Participant : INotifyDataErrorInfo, IEquatable<Participant>
     {
         private void ValidateProperty(string property)
         {
@@ -123,15 +122,7 @@ namespace ZaliczenieWF.Core.Models
             }
         }
         public string Ocena { get; set; }
-        public ObservableCollection<Score> Scores
-        {
-            get => _scores;
-            set
-            {
-                _scores = value;
-                RaisePropertyChanged(nameof(Scores));
-            }
-        }
+        public ObservableCollection<Score> Scores { get; set; } = new ObservableCollection<Score>();
         public string Errors => GetErrors();
 
         private string GetErrors()
@@ -155,7 +146,6 @@ namespace ZaliczenieWF.Core.Models
         private string _pESEL;
         private string _kolumna;
         private string _jednostkaWojskowa;
-        private ObservableCollection<Score> _scores = new ObservableCollection<Score>();
 
         public bool HasErrors => _errorsByPropertyName.Any();
 
@@ -183,6 +173,8 @@ namespace ZaliczenieWF.Core.Models
             return PESEL.GetHashCode();
         }
 
+        public AgeGroup AgeGroup { get; set; }
+        public string AgeGroupString => AgeGroup.GetDescription();
         public bool Equals(Participant other)
         {
             return string.Equals(other.PESEL, PESEL, StringComparison.OrdinalIgnoreCase);
