@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using ZaliczenieWF.Models.Extensions;
 
 namespace ZaliczenieWF.Models
@@ -8,7 +7,7 @@ namespace ZaliczenieWF.Models
     public class Score : IEquatable<Score>
     {
         public Participant Participant { get; set; }
-        public Competition  Competition { get; set; }
+        public Competition Competition { get; set; }
         public double? Time { get; set; }
         public int? Quantity { get; set; }
         public List<Participant> Participants { get; set; }

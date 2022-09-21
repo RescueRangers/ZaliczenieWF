@@ -1,14 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Syncfusion.Pdf;
-using Syncfusion.Pdf.Graphics;
 using ZaliczenieWF.Models;
 //using BoldReports.Writer;
 //using BoldReports.Windows;
-using System.Linq;
-using System.IO;
-using BoldReports.RDL.DOM;
 //using ZaliczenieWF.Reporting;
 
 namespace ZaliczenieWF.Core.Services

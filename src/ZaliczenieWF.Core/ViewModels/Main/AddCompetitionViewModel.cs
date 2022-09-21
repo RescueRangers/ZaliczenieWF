@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using ZaliczenieWF.Models;
-using ZaliczenieWF.Core.Services;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
     public class AddCompetitionViewModel : BaseViewModel<Participant, Score>
     {
 
-        private List<string> _competitions = new List<string> { "10x10", "Brzuszki", "Podciągnięcia", "Marszobieg"};
+        private List<string> _competitions = new List<string> { "10x10", "Brzuszki", "Podciągnięcia", "Marszobieg" };
         private string _selectedCompetition;
         private int? _qtyScore;
         private TimeSpan? _timeScore;

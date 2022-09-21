@@ -1,19 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading.Tasks;
-using Acr.UserDialogs;
-using Microsoft.Extensions.Logging;
-using MvvmCross;
-using MvvmCross.Commands;
-using ZaliczenieWF.Core.Events;
-using ZaliczenieWF.Models;
-using ZaliczenieWF.Core.Services;
-using MvvmCross.Navigation;
 using System.Globalization;
-using System.Threading;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using MvvmCross.Commands;
+using MvvmCross.Navigation;
+using ZaliczenieWF.Core.Events;
+using ZaliczenieWF.Core.Services;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {
@@ -48,7 +42,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             _commsService.SerialConnection += OnSerialConnection;
 
 #if DEBUG
-            _participants.Add(new Participant { Name = "Test Testinski", Kolumna = "I", Stopien = "Szeregowy", PESEL = "86110107019", JednostkaWojskowa = "JW"});
+            _participants.Add(new Participant { Name = "Test Testinski", Kolumna = "I", Stopien = "Szeregowy", PESEL = "86110107019", JednostkaWojskowa = "JW" });
             DebugEventCommand = new MvxCommand(() => OnScoreReceived(this, new ScoreReceivedEventArgs { Competition = Competition.Brzuszki, Score = "22" }));
 #endif
         }

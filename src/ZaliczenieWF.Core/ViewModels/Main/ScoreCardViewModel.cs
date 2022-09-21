@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
-using ZaliczenieWF.Models;
 using ZaliczenieWF.Core.Services;
+using ZaliczenieWF.Models;
 
 namespace ZaliczenieWF.Core.ViewModels.Main
 {

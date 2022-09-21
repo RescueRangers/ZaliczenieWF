@@ -1,9 +1,8 @@
 using System;
-using System.ComponentModel;
-using System.Reflection;
 using ZaliczenieWF.Models;
 
-namespace ZaliczenieWF.Core.Services{
+namespace ZaliczenieWF.Core.Services
+{
     public class ScoreService : IScoreService
     {
         public double CalculateScores(Participant participant)
@@ -17,7 +16,7 @@ namespace ZaliczenieWF.Core.Services{
                 double year = peselNumber[2] / 2;
                 yearOfBirth += (int)(Math.Floor(year) * 100);
             }
-            if(peselNumber[2] >=8)
+            if (peselNumber[2] >= 8)
             {
                 yearOfBirth -= 100;
             }
@@ -332,7 +331,7 @@ namespace ZaliczenieWF.Core.Services{
             return AgeGroup._56;
         }
 
-        
+
     }
 }
 

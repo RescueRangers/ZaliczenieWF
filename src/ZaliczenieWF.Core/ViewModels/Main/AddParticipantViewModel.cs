@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -12,7 +10,6 @@ namespace ZaliczenieWF.Core.ViewModels.Main
     public class AddParticipantViewModel : BaseViewModel<Participant, Participant>
     {
         private Participant _editingParticipant;
-        private string _errors;
         private readonly IMvxNavigationService _navigationService;
 
         public AddParticipantViewModel(IMvxNavigationService navigationService)
@@ -57,7 +54,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
                     SubmitTask = MvxNotifyTask.Create(Submit);
                     RaisePropertyChanged(() => SubmitTask);
                 }
-                
+
             });
             CancelCommand = new MvxCommand(() => _navigationService.Close(this, null));
         }

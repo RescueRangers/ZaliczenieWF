@@ -24,9 +24,9 @@ namespace ZaliczenieWF.Reporting
             viewer.DataSources.Add(participantDataSource);
             viewer.DataSources.Add(scoreDataSource);
 
-            byte[] Bytes = viewer.Render(format: "PDF", deviceInfo: "");
+            var Bytes = viewer.Render(format: "PDF", deviceInfo: "");
 
-            using (FileStream stream = new FileStream(testFileName, FileMode.Create))
+            using (var stream = new FileStream(testFileName, FileMode.Create))
             {
                 stream.Write(Bytes, 0, Bytes.Length);
             }

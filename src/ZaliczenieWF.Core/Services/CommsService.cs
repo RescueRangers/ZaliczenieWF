@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO.Ports;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -14,7 +12,7 @@ namespace ZaliczenieWF.Core.Services
 {
     internal class CommsService : ICommsService
     {
-        
+
         private readonly ILogger<CommsService> _logger;
         private CancellationTokenSource _source;
         private CancellationToken _token;
@@ -86,7 +84,7 @@ namespace ZaliczenieWF.Core.Services
 
         private void ProcessScores(string message)
         {
-            if(_currentCompetition == Competition.Null)
+            if (_currentCompetition == Competition.Null)
             {
                 _logger.LogError($"Wynik bez zadeklarowanej konkurencji. Wynik = {message}");
                 return;
