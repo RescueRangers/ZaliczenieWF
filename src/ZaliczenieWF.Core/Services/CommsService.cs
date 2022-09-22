@@ -31,54 +31,76 @@ namespace ZaliczenieWF.Core.Services
         {
             _source = new CancellationTokenSource();
             _token = _source.Token;
+            var taskCompletionSource = new TaskCompletionSource<object>();
 
-            using (var serial = new SerialPortStream(serialPort, 9600, 8, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One))
+            using (_token.Register(() => taskCompletionSource.TrySetCanceled()))
             {
-                try
+                using (var serial = new SerialPortStream(serialPort, 9600, 8, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One))
                 {
-                    serial.Open();
-                    _logger.LogDebug($"{serialPort} opened");
-                    await serial.FlushAsync();
-                    OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = true });
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message);
-                    OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false, IsError = true, ErrorMessage = ex.Message });
-                    return;
-                }
-                await Task.Run(() =>
-                {
-                    _logger.LogDebug("Task running");
-                    serial.DiscardInBuffer();
-                    //var message = "";
-                    while (!_token.IsCancellationRequested)
+                    
+                    var task = Task.Run(async () =>
                     {
-                        var message = serial.ReadLine();
-                        Thread.Sleep(100);
-
-                        switch (message.ToLower())
+                        try
                         {
-                            case "10x10 start":
-                                _currentCompetition = Competition._10x10;
-                                break;
-                            case "3000m start":
-                                _currentCompetition = Competition.Marszobieg;
-                                break;
-                            case "sklony start":
-                                _currentCompetition = Competition.Brzuszki;
-                                break;
-                            default:
-                                if (message.StartsWith("wynik:", StringComparison.InvariantCultureIgnoreCase))
-                                    ProcessScores(message);
-                                break;
+                            serial.Open();
+                            _logger.LogDebug($"{serialPort} opened");
+                            await serial.FlushAsync();
+                            OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = true });
                         }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex.Message);
+                            OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false, IsError = true, ErrorMessage = ex.Message });
+                            return;
+                        }
+                        _logger.LogDebug("Task running");
+                        serial.DiscardInBuffer();
+                        string message = string.Empty;
+                        var stringBuffer = string.Empty;
 
-                        OnScoreReceived(new ScoreReceivedEventArgs { Score = message });
-                    }
-                }, _token);
-                serial.Close();
-                OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false });
+                        while (!_token.IsCancellationRequested)
+                        {
+                            _token.ThrowIfCancellationRequested();
+
+#if DEBUG
+                            var c = (char)serial.ReadChar();
+                            if (c == '\r' || c == '\n')
+                            {
+                                message = stringBuffer;
+                                stringBuffer = "";
+                            }
+                            else
+                            {
+                                stringBuffer += c;
+                            }
+#else
+                            message = serial.ReadLine();
+#endif
+
+                            Thread.Sleep(100);
+
+                            switch (message.ToLower())
+                            {
+                                case "10x10 start":
+                                    _currentCompetition = Competition._10x10;
+                                    break;
+                                case "3000m start":
+                                    _currentCompetition = Competition.Marszobieg;
+                                    break;
+                                case "sklony start":
+                                    _currentCompetition = Competition.Brzuszki;
+                                    break;
+                                default:
+                                    if (message.StartsWith("wynik:", StringComparison.InvariantCultureIgnoreCase))
+                                        ProcessScores(message);
+                                    break;
+                            }
+                        }
+                    }, _token);
+                    serial.Close();
+                    await Task.WhenAny(task, taskCompletionSource.Task);
+                    OnSerialConnection(new SerialConnectionEventArgs { ConnectionStatus = false });
+                }
             }
         }
 
