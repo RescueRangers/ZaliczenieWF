@@ -20,11 +20,13 @@ namespace ZaliczenieWF.Models
 
         private string GetScore()
         {
+            
             if (Competition == Competition.Brzuszki || Competition == Competition.Podciaganie)
             {
                 return Quantity.ToString();
             }
-            return $"{Time / 1000}s";
+            var time = TimeSpan.FromMilliseconds(Time.Value);
+            return $"{time:g}";
         }
 
         public double MinPassingScore { get; set; }
