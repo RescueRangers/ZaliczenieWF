@@ -67,10 +67,10 @@
 
                 <syncfusion:TimeSpanEdit
                     AllowNull="True"
-                    Format="mm:ss.z"
+                    Format="mm:ss.zz"
                     MaxValue="00:59:59.0"
                     MinValue="00:00:00.0"
-                    StepInterval="1.1:1:1.100"
+                    StepInterval="1.1:1:1.050"
                     Value="{Binding TimeScore, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </syncfusion:SfTextInputLayout>
 
