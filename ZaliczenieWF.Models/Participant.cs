@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ZaliczenieWF.Models.Extensions;
 
 namespace ZaliczenieWF.Models
 {
 
-    public class Participant : INotifyDataErrorInfo, IEquatable<Participant>
+    public class Participant : INotifyDataErrorInfo, IEquatable<Participant>, INotifyPropertyChanged
     {
         private void ValidateProperty(string property)
         {
@@ -121,8 +122,28 @@ namespace ZaliczenieWF.Models
                 ValidateProperty(nameof(JednostkaWojskowa));
             }
         }
-        public string Ocena { get; set; }
-        public ObservableCollection<Score> Scores { get; set; } = new ObservableCollection<Score>();
+        public string Ocena
+        {
+            get
+            {
+                if (Scores.Count < 4)
+                    return "NA";
+                if (Scores.Any(x => !x.Passed))
+                    return "2";
+                return CalculateScore();
+            }
+        }
+
+        public ObservableCollection<Score> Scores
+        {
+            get => _scores;
+            set
+            {
+                _scores = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Ocena));
+            }
+        }
         public string Errors => GetErrors();
 
         private string GetErrors()
@@ -146,14 +167,21 @@ namespace ZaliczenieWF.Models
         private string _pESEL;
         private string _kolumna;
         private string _jednostkaWojskowa;
+        private ObservableCollection<Score> _scores = new ObservableCollection<Score>();
 
         public bool HasErrors => _errorsByPropertyName.Any();
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public IEnumerable GetErrors(string propertyName)
@@ -175,6 +203,89 @@ namespace ZaliczenieWF.Models
 
         public AgeGroup AgeGroup { get; set; }
         public string AgeGroupString => AgeGroup.GetDescription();
+
+        private string CalculateScore()
+        {
+            var scoreSum = Scores.Select(x => x.CalculatedScore).Sum();
+            switch (Kolumna)
+            {
+                case "I":
+                    if (scoreSum >= 95)
+                    {
+                        return "5";
+                    }
+                    if (scoreSum >= 84)
+                    {
+                        return "4";
+                    }
+                    if (scoreSum >= 73)
+                    {
+                        return "3";
+                    }
+                    break;
+                case "II":
+                    if (scoreSum >= 90)
+                    {
+                        return "5";
+                    }
+                    if (scoreSum >= 80)
+                    {
+                        return "4";
+                    }
+                    if (scoreSum >= 68)
+                    {
+                        return "3";
+                    }
+                    break;
+                case "III":
+                    if (scoreSum >= 92)
+                    {
+                        return "5";
+                    }
+                    if (scoreSum >= 81)
+                    {
+                        return "4";
+                    }
+                    if (scoreSum >= 69)
+                    {
+                        return "3";
+                    }
+                    break;
+                case "IV":
+                    if (scoreSum >= 80)
+                    {
+                        return "5";
+                    }
+                    if (scoreSum >= 68)
+                    {
+                        return "4";
+                    }
+                    if (scoreSum >= 60)
+                    {
+                        return "3";
+                    }
+                    break;
+                case "V":
+                    if (scoreSum >= 40)
+                    {
+                        return "5";
+                    }
+                    if (scoreSum >= 30)
+                    {
+                        return "4";
+                    }
+                    if (scoreSum >= 20)
+                    {
+                        return "3";
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            return "2";
+        }
+
         public bool Equals(Participant other)
         {
             return string.Equals(other.PESEL, PESEL, StringComparison.OrdinalIgnoreCase);
