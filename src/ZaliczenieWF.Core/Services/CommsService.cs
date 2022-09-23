@@ -55,7 +55,7 @@ namespace ZaliczenieWF.Core.Services
                         }
                         _logger.LogDebug("Task running");
                         serial.DiscardInBuffer();
-                        string message = string.Empty;
+                        var message = string.Empty;
                         var stringBuffer = string.Empty;
 
                         while (!_token.IsCancellationRequested)
