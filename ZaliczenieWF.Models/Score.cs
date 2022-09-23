@@ -12,7 +12,7 @@ namespace ZaliczenieWF.Models
         public int? Quantity { get; set; }
         public List<Participant> Participants { get; set; }
 
-        public double CalculatedScore { get; set; }
+        public double Points { get; set; }
         public bool Passed { get; set; } = true;
 
         public string ScoreString => GetScore();
@@ -26,10 +26,12 @@ namespace ZaliczenieWF.Models
                 return Quantity.ToString();
             }
             var time = TimeSpan.FromMilliseconds(Time.Value);
-            return $"{time:g}";
+            return time.ToString(@"mm\:ss\,ff");
         }
 
-        public double MinPassingScore { get; set; }
+        public string MinScore{ get; set; }
+
+        public double MinPoints { get; set; }
 
         public override bool Equals(object obj)
         {

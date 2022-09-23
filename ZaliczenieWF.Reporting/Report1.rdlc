@@ -630,7 +630,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!MinPassingScore.Value</Value>
+                              <Value>=Fields!MinScore.Value</Value>
                               <Style>
                                 <FontSize>12pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
@@ -698,7 +698,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!CalculatedScore.Value</Value>
+                              <Value>=Fields!Points.Value</Value>
                               <Style>
                                 <FontSize>12pt</FontSize>
                                 <FontWeight>Normal</FontWeight>
@@ -988,7 +988,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>=Sum(Fields!CalculatedScore.Value, "Scores")</Value>
+                        <Value>=Sum(Fields!Points.Value, "Scores")</Value>
                         <Style>
                           <FontSize>12pt</FontSize>
                           <FontWeight>Bold</FontWeight>
@@ -1164,7 +1164,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>textbox1</rd:DefaultName>
-        <Top>18.60092cm</Top>
+        <Top>20.82342cm</Top>
         <Left>3.12208cm</Left>
         <Height>0.26886in</Height>
         <Width>3.75325in</Width>
@@ -1177,7 +1177,7 @@
         </Style>
       </Textbox>
       <Line Name="Line9">
-        <Top>7.30376in</Top>
+        <Top>8.17876in</Top>
         <Left>1.22917in</Left>
         <Height>0in</Height>
         <Width>3.82422in</Width>
@@ -1206,7 +1206,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox8</rd:DefaultName>
-        <Top>17.59162cm</Top>
+        <Top>19.81412cm</Top>
         <Left>0.18026cm</Left>
         <Height>0.65746cm</Height>
         <Width>2.03023cm</Width>
@@ -1222,7 +1222,7 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>19.28383cm</Height>
+    <Height>21.50632cm</Height>
     <Style />
   </Body>
   <Width>16.97969cm</Width>
@@ -1325,10 +1325,6 @@
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="CalculatedScore">
-          <DataField>CalculatedScore</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
-        </Field>
         <Field Name="Competition">
           <DataField>Competition</DataField>
           <rd:TypeName>ZaliczenieWF.Models.Competition</rd:TypeName>
@@ -1337,9 +1333,13 @@
           <DataField>CompetitionString</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="MinPassingScore">
-          <DataField>MinPassingScore</DataField>
+        <Field Name="MinPoints">
+          <DataField>MinPoints</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="MinScore">
+          <DataField>MinScore</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Participant">
           <DataField>Participant</DataField>
@@ -1348,6 +1348,10 @@
         <Field Name="Passed">
           <DataField>Passed</DataField>
           <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="Points">
+          <DataField>Points</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
         <Field Name="Quantity">
           <DataField>Quantity</DataField>

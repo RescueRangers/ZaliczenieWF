@@ -206,7 +206,7 @@ namespace ZaliczenieWF.Models
 
         private string CalculateScore()
         {
-            var scoreSum = Scores.Select(x => x.CalculatedScore).Sum();
+            var scoreSum = Scores.Select(x => x.Points).Sum();
             switch (Kolumna)
             {
                 case "I":

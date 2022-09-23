@@ -132,7 +132,7 @@
                 <syncfusion:GridTextColumn
                     AllowEditing="False"
                     HeaderText="Punkty"
-                    MappingName="CalculatedScore" />
+                    MappingName="Points" />
                 <syncfusion:GridCheckBoxColumn
                     AllowEditing="False"
                     HeaderText="Zaliczone"
