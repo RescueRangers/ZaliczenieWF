@@ -14,6 +14,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         private IMvxNavigationService _navigationService;
         private IScoreService _scoreService;
         private IReportService _reportService;
+        private bool _isReportGenerating;
 
         public ScoreCardViewModel(IMvxNavigationService navigationService, IScoreService scoreService, IReportService reportService)
         {
@@ -29,9 +30,21 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
         public override void Prepare()
         {
-            BackCommand = new MvxCommand(() => _navigationService.Close(this));
+            BackCommand = new MvxCommand(() =>
+            {
+                var scores = _participant.Scores.ToList();
+                _participant.Scores = new ObservableCollection<Score>(scores);
+                _navigationService.Close(this);
+            });
             AddCompetitionCommand = new MvxAsyncCommand(async () => await AddCompetitionAsync());
-            GenerateReportCommand = new MvxCommand(() => _reportService.GeneratePdfReport(Participant));
+            GenerateReportCommand = new MvxAsyncCommand(async () => await StartReportGenerationAsync());
+        }
+
+        private async Task StartReportGenerationAsync()
+        {
+            IsReportGenerating = true;
+            await _reportService.GeneratePdfReportAsync(Participant);
+            IsReportGenerating = false;
         }
 
         private async Task AddCompetitionAsync()
@@ -72,8 +85,18 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             }
         }
 
+        public bool IsReportGenerating
+        {
+            get => _isReportGenerating;
+            set
+            {
+                _isReportGenerating = value;
+                RaisePropertyChanged(() => IsReportGenerating);
+            }
+        }
+
         public IMvxCommand BackCommand { get; set; }
         public IMvxAsyncCommand AddCompetitionCommand { get; set; }
-        public IMvxCommand GenerateReportCommand { get; set; }
+        public IMvxAsyncCommand GenerateReportCommand { get; set; }
     }
 }
