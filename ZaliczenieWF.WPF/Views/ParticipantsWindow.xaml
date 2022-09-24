@@ -117,7 +117,7 @@
             </syncfusion:SfDataGrid.Columns>
             <Behaviors:Interaction.Triggers>
                 <Behaviors:EventTrigger EventName="MouseDoubleClick">
-                    <Behaviors:InvokeCommandAction Command="{Binding RowDataCommand}" />
+                    <Behaviors:InvokeCommandAction Command="{Binding OpenScoreCardCommand}" />
                 </Behaviors:EventTrigger>
             </Behaviors:Interaction.Triggers>
         </syncfusion:SfDataGrid>
