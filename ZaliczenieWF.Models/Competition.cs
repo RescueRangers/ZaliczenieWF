@@ -6,7 +6,6 @@ namespace ZaliczenieWF.Models
     public enum Competition
     {
         [Description("10x10")]
-        [Display(Name = "10x10")]
         _10x10 = 1,
         [Description("Brzuszki")]
         Brzuszki = 2,
