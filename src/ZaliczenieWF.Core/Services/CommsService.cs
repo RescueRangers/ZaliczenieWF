@@ -93,6 +93,7 @@ namespace ZaliczenieWF.Core.Services
                                 default:
                                     if (message.StartsWith("wynik:", StringComparison.InvariantCultureIgnoreCase))
                                         ProcessScores(message);
+                                    _logger.LogDebug(message);
                                     break;
                             }
                         }
