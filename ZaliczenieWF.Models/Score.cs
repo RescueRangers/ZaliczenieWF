@@ -6,12 +6,12 @@ namespace ZaliczenieWF.Models
 {
     public class Score : IEquatable<Score>
     {
+        public string ParticipantId { get; set; }
         public Participant Participant { get; set; }
         public Competition Competition { get; set; }
         public double? Time { get; set; }
         public int? Quantity { get; set; }
         public List<Participant> Participants { get; set; }
-
         public double Points { get; set; }
         public bool Passed { get; set; } = true;
 
@@ -28,9 +28,7 @@ namespace ZaliczenieWF.Models
             var time = TimeSpan.FromMilliseconds(Time.Value);
             return time.ToString(@"mm\:ss\,ff");
         }
-
         public string MinScore{ get; set; }
-
         public double MinPoints { get; set; }
 
         public override bool Equals(object obj)

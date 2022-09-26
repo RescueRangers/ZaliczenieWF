@@ -9,7 +9,6 @@ using ZaliczenieWF.Models.Extensions;
 
 namespace ZaliczenieWF.Models
 {
-
     public class Participant : INotifyDataErrorInfo, IEquatable<Participant>, INotifyPropertyChanged
     {
         private void ValidateProperty(string property)
@@ -75,6 +74,7 @@ namespace ZaliczenieWF.Models
             PESEL += "";
         }
 
+        public string Id => (string)"@".Concat(PESEL);
         public string Stopien
         {
             get => _stopien;
@@ -133,17 +133,20 @@ namespace ZaliczenieWF.Models
                 return CalculateScore();
             }
         }
-
         public ObservableCollection<Score> Scores
         {
             get => _scores;
             set
             {
                 _scores = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Ocena));
+                if(PropertyChanged != null)
+                {
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Ocena));
+                }
             }
         }
+
         public string Errors => GetErrors();
 
         private string GetErrors()
@@ -202,6 +205,7 @@ namespace ZaliczenieWF.Models
         }
 
         public AgeGroup AgeGroup { get; set; }
+
         public string AgeGroupString => AgeGroup.GetDescription();
 
         private string CalculateScore()

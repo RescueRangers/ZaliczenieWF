@@ -13,6 +13,7 @@ namespace ZaliczenieWF.Core
             Mvx.IoCProvider.RegisterType<ICommsService, CommsService>();
             Mvx.IoCProvider.RegisterType<IScoreService, ScoreService>();
             Mvx.IoCProvider.RegisterType<IReportService, ReportService>();
+            Mvx.IoCProvider.RegisterType<IDataIOService, CsvDataService>();
             Mvx.IoCProvider.RegisterSingleton(() => UserDialogs.Instance);
             RegisterAppStart<MainViewModel>();
         }

@@ -87,7 +87,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="20,20,20,0"
-                CharMaxLength="10"
+                CharMaxLength="11"
                 ContainerType="Outlined"
                 ErrorText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ErrorConverter}}"
                 HasError="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputView.(Validation.Errors), Converter={StaticResource ObjectToBoolConverter}}"
@@ -98,7 +98,7 @@
 
                 <syncfusion:IntegerTextBox
                     GroupSeperatorEnabled="False"
-                    MaxLength="12"
+                    MaxLength="11"
                     NullValue="{x:Null}"
                     Text="{Binding EditingParticipant.PESEL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                     TextSelectionOnFocus="False"

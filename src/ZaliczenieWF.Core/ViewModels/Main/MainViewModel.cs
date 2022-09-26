@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
+using MvvmCross.ViewModels;
 using ZaliczenieWF.Core.Events;
 using ZaliczenieWF.Core.Services;
 using ZaliczenieWF.Models;
@@ -17,13 +18,17 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         private ICommsService _commsService;
         private readonly IMvxNavigationService _navigationService;
         private ILogger<MainViewModel> _logger;
+        private IDataIOService _dataIO;
 
-        public MainViewModel(IScoreService scoreService, ILogger<MainViewModel> logger, ICommsService commsService, IMvxNavigationService navigationService)
+        public MainViewModel(IScoreService scoreService, ILogger<MainViewModel> logger, ICommsService commsService, IMvxNavigationService navigationService, IDataIOService dataIO)
         {
             _scoreService = scoreService;
             _logger = logger;
             _commsService = commsService;
             _navigationService = navigationService;
+            _dataIO = dataIO;
+
+            
         }
 
         public override async Task Initialize()
@@ -37,14 +42,11 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
             AddParticipantCommand = new MvxAsyncCommand(async () => await AddNewParticipantAsync());
             OpenScoreCardCommand = new MvxCommand(() => OpenScoreCard());
+            SaveDataCommand = new MvxAsyncCommand(async () => await _dataIO.SaveParticipantsAsync(Participants));
 
             _commsService.ScoreReceived += OnScoreReceived;
             _commsService.SerialConnection += OnSerialConnection;
-
-#if DEBUG
-            _participants.Add(new Participant { Name = "Test Testinski", Kolumna = "I", Stopien = "Szeregowy", PESEL = "86110107019", JednostkaWojskowa = "JW" });
-            DebugEventCommand = new MvxCommand(() => OnScoreReceived(this, new ScoreReceivedEventArgs { Competition = Competition.Brzuszki, Score = "22" }));
-#endif
+            Participants = new ObservableCollection<Participant>(await _dataIO.ReadParticipantsAsync());
         }
 
         private void OpenScoreCard()
@@ -151,7 +153,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         public IMvxCommand Disconnect { get; set; }
         public IMvxAsyncCommand AddParticipantCommand { get; set; }
         public IMvxCommand OpenScoreCardCommand { get; set; }
-        public IMvxCommand DebugEventCommand { get; set; }
+        public IMvxAsyncCommand SaveDataCommand { get; set; }
 
         private ObservableCollection<string> _ports;
         public ObservableCollection<string> Ports

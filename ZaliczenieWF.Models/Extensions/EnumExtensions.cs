@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -19,6 +20,26 @@ namespace ZaliczenieWF.Models.Extensions
                 }
             }
             return genericEnum.ToString();
+        }
+
+        public static T GetValueFromDescription<T>(this string description) where T : Enum
+        {
+            foreach (FieldInfo field in typeof(T).GetFields())
+            {
+                if (Attribute.GetCustomAttribute(field,
+                typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                {
+                    if (attribute.Description == description)
+                        return (T)field.GetValue(null);
+                }
+                else
+                {
+                    if (field.Name == description)
+                        return (T)field.GetValue(null);
+                }
+            }
+
+            throw new ArgumentException("Not found.", nameof(description));
         }
     }
 }
