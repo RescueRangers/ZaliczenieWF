@@ -15,6 +15,11 @@ namespace ZaliczenieWF.Core.Services
         private string _filePath = "Data.csv";
         public async Task SaveParticipantsAsync(IEnumerable<Participant> participants)
         {
+            if (!CheckIfFileExists())
+            {
+                return;
+            }
+
             using var writer = new StreamWriter(_filePath, false, new UTF8Encoding(true));
 
             await writer.WriteLineAsync("Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumn;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty");
@@ -51,6 +56,10 @@ namespace ZaliczenieWF.Core.Services
         public async Task<IEnumerable<Participant>> ReadParticipantsAsync()
         {
             var participants = new List<Participant>();
+            if (!CheckIfFileExists())
+            {
+                return participants;
+            }
 
             using var reader = new StreamReader(_filePath, new UTF8Encoding(true));
 
@@ -100,6 +109,24 @@ namespace ZaliczenieWF.Core.Services
             }
 
             return participants;
+        }
+
+        private bool CheckIfFileExists()
+        {
+            var file = new FileInfo(_filePath);
+            if (!file.Exists)
+            {
+                try
+                {
+                    file.Create();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
