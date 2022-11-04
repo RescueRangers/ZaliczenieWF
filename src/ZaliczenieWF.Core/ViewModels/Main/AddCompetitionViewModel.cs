@@ -54,6 +54,8 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             {
                 _selectedCompetition = value;
                 RaisePropertyChanged(nameof(SelectedCompetition));
+
+                // Ustawia czy wynik jest w formie czasu czy liczby na podstawie wybranej konkurencji.
                 switch (value)
                 {
                     case "10x10":

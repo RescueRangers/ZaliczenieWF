@@ -35,17 +35,22 @@ namespace ZaliczenieWF.Core.ViewModels.Main
         {
             await base.Initialize();
 
+            // Inicjalizacja kolekcji uczestników i portów serial
             _participants = new ObservableCollection<Participant>();
             _ports = new ObservableCollection<string>(_commsService.EnumerateSerialPorts());
 
+            // Inicjalizacja komend
             ConnectToPort = new MvxAsyncCommand(async () => await _commsService.Connect(SelectedSerialPort));
             Disconnect = new MvxCommand(() => _commsService.Disconnect(SelectedSerialPort));
             AddParticipantCommand = new MvxAsyncCommand(async () => await AddNewParticipantAsync());
             OpenScoreCardCommand = new MvxCommand(() => OpenScoreCard());
             SaveDataCommand = new MvxAsyncCommand(async () => await _dataIO.SaveParticipantsAsync(Participants));
 
+            // Przypisanie eventów
             _commsService.ScoreReceived += OnScoreReceived;
             _commsService.SerialConnection += OnSerialConnection;
+
+            // Czytanie listy uczestników z pliku z danymi
             Participants = new ObservableCollection<Participant>(await _dataIO.ReadParticipantsAsync());
         }
 
@@ -57,6 +62,12 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             _navigationService.Navigate<ScoreCardViewModel, Participant>(SelectedParticipant);
         }
 
+        /// <summary>
+        /// Ustawia status połączenia po otrzymaniu eventu.
+        /// W przypadku błędu nawiguje do okienka które wyświetli jego treść.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnSerialConnection(object sender, SerialConnectionEventArgs e)
         {
             ConnectionStatus = e.ConnectionStatus;
@@ -64,6 +75,12 @@ namespace ZaliczenieWF.Core.ViewModels.Main
                 _navigationService.Navigate<ModalViewModel, string>(e.ErrorMessage);
         }
 
+        /// <summary>
+        /// Przekształca wynik otrzymany z portu serial na format używany w aplikacji.
+        /// Wynik w formie string na int lub double w zależności do konkurecji.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnScoreReceived(object sender, ScoreReceivedEventArgs e)
         {
             var score = new Score();
@@ -93,6 +110,11 @@ namespace ZaliczenieWF.Core.ViewModels.Main
             _ = ShowReceivedScoreAsync(score);
         }
 
+        /// <summary>
+        /// Dodaje otrzymaną punktacje do istniejącego już uczestnika, lub dodaje nowego uczestnika z otrzymaną punktacją.
+        /// </summary>
+        /// <param name="score"></param>
+        /// <returns></returns>
         private async Task ShowReceivedScoreAsync(Score score)
         {
             Participant result = await _navigationService.Navigate<ScoreReceivedViewModel, Score, Participant>(score);
