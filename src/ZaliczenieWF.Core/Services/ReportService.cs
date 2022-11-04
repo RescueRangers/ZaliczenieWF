@@ -10,6 +10,11 @@ namespace ZaliczenieWF.Core.Services
 {
     public class ReportService : IReportService
     {
+        /// <summary>
+        /// Generuje raport który zostanie zapisany w głównym folderze aplikacji.
+        /// </summary>
+        /// <param name="participant">Uczestnik egzaminu</param>
+        /// <returns></returns>
         public async Task GeneratePdfReportAsync(Participant participant)
         {
             await Reporting.GenerateReport.PdfAsync(participant);

@@ -8,9 +8,16 @@ namespace ZaliczenieWF.Reporting
 {
     public static class GenerateReport
     {
+        /// <summary>
+        /// Generuje raport na podstawie wzoru w pliku Repoer1.rdlc znajdującego się w główym folderze aplikacji.
+        /// </summary>
+        /// <param name="participant">Uczestnik</param>
+        /// <returns></returns>
         public static async Task PdfAsync(Participant participant)
         {
+            // Ścieżka do pliku z definicją raportu
             var report = @"Report1.rdlc";
+            // Nazwa pod jaką zostanie zapisany raport.
             var fileName = $"{participant.Name}.pdf";
 
             var participants = new List<Participant> { participant };
@@ -25,8 +32,10 @@ namespace ZaliczenieWF.Reporting
             viewer.DataSources.Add(participantDataSource);
             viewer.DataSources.Add(scoreDataSource);
 
+            // Renderuje raport do macierzy bajtów
             var Bytes = viewer.Render(format: "PDF", deviceInfo: "");
 
+            // Zapisuje raport używając strumienia danych
             using (var stream = new FileStream(fileName, FileMode.Create))
             {
                 await stream.WriteAsync(Bytes, 0, Bytes.Length);

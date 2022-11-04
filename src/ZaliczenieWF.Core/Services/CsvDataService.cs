@@ -13,22 +13,32 @@ namespace ZaliczenieWF.Core.Services
     public class CsvDataService : IDataIOService
     {
         private string _filePath = "Data.csv";
+
+        /// <summary>
+        /// Zapisuje uczestników do płaskiego pliku csv.
+        /// Każdy uczestnik wraz z konkurencjami i punktacją znajduje się na jednej linii pliku.
+        /// </summary>
+        /// <param name="participants">Lista uczestników</param>
+        /// <returns></returns>
         public async Task SaveParticipantsAsync(IEnumerable<Participant> participants)
         {
             using var writer = new StreamWriter(_filePath, false, new UTF8Encoding(true));
-
+            // Nagłówek pliku csv.
             await writer.WriteLineAsync("Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumn;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty");
 
             foreach (Participant participant in participants)
             {
+                // Zapisuje dane uczestnika bez przechodzenia do nowej linii
                 await writer.WriteAsync($"{participant.Name};{participant.Stopien};{participant.PESEL};{participant.JednostkaWojskowa};{participant.Kolumna};");
+                // Sortowanie punktacji po konkurencji
                 IEnumerable<Score> orderedScores = participant.Scores.OrderBy(x => x.Competition);
                 foreach (Score score in orderedScores)
                 {
-                   
+                    // Zapisuje konkurencje i wyniki bez przechodzenia do nowej linii
                     await writer.WriteAsync($"{score.CompetitionString};{score.MinScore};{score.ScoreString};{score.Points};");
                     
                 }
+                // Przejście do nowej linii
                 await writer.WriteLineAsync();
             }
         }
@@ -48,13 +58,17 @@ namespace ZaliczenieWF.Core.Services
 
         }
 
+        /// <summary>
+        /// Czyta z pliku listę uczestników
+        /// </summary>
+        /// <returns>Lista uczestników wraz z konkurencjami.</returns>
         public async Task<IEnumerable<Participant>> ReadParticipantsAsync()
         {
             var participants = new List<Participant>();
 
             using var reader = new StreamReader(_filePath, new UTF8Encoding(true));
 
-            //Skip header line
+            //Pomija pierwszą linię pliku gdzie znajduje sie nagłówek.
             await reader.ReadLineAsync();
 
             while (!reader.EndOfStream)
@@ -72,7 +86,10 @@ namespace ZaliczenieWF.Core.Services
                 var scores = new List<Score>();
                 for (var i = 5; i < data.Length-1; i+=4)
                 {
+                    // Czyta konkurencje z pliku
                     Competition competition = data[i].GetValueFromDescription<Competition>();
+
+                    // Jeżeli wynik konkurencji jest liczbą stałą czyta ją z pliku
                     if (competition == Competition.Brzuszki || competition == Competition.Podciaganie)
                     {
                         scores.Add(new Score
@@ -83,6 +100,7 @@ namespace ZaliczenieWF.Core.Services
                             Points = double.Parse(data[i+3])
                         });
                     }
+                    // Jeżli punktacja jest czasem odczytuje go używając formatu w którym dane są zapisywane.
                     else
                     {
                         var time = TimeSpan.ParseExact(data[i + 2], @"mm\:ss\,ff", null);

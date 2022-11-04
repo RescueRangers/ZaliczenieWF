@@ -4,6 +4,6 @@ namespace ZaliczenieWF.Core.Services
 {
     public interface IScoreService
     {
-        double CalculateScores(Participant participant);
+        void CalculateScores(Participant participant);
     }
 }

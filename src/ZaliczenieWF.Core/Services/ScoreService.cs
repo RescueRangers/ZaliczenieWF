@@ -5,11 +5,18 @@ namespace ZaliczenieWF.Core.Services
 {
     public class ScoreService : IScoreService
     {
-        public double CalculateScores(Participant participant)
+        /// <summary>
+        /// Przelicza punkty wybranego uczestnika
+        /// </summary>
+        /// <param name="participant"></param>
+        public void CalculateScores(Participant participant)
         {
-            double calculatedScore = 0;
+            // Zamienia numer pesel w formacie string do macierzy liczb całkowitych
+            // używaną w późniejszych przeliczeniach daty urodzenia oraz płci.
             var peselNumber = GetPeselNumber(participant.PESEL);
 
+            // Obliczenie roku urodzenia biorąc pod uwagę stulecie w którym urodził się uczestnik.
+            // Wg https://www.gov.pl/web/gov/czym-jest-numer-pesel
             var yearOfBirth = 1900 + peselNumber[0] * 10 + peselNumber[1];
             if (peselNumber[2] >= 2 && peselNumber[2] < 8)
             {
@@ -21,10 +28,15 @@ namespace ZaliczenieWF.Core.Services
                 yearOfBirth -= 100;
             }
             var age = DateTime.Now.Year - yearOfBirth;
+
+            // Przelicza wiek do grupy wiekowej uczestnika.
             participant.AgeGroup = CalculateAgeBracket(age);
 
-            var isMan = peselNumber[10] % 2 == 1;
+            // Sprawdza płeć użytkownika.
+            // Wg https://www.gov.pl/web/gov/czym-jest-numer-pesel przedostatnia cyfra pesel u mężczyzn jest nieparzysta.
+            var isMan = peselNumber[9] % 2 == 1;
 
+            // Przelicza wszystkie konkurencje
             foreach (Score score in participant.Scores)
             {
                 switch (score.Competition)
@@ -47,10 +59,13 @@ namespace ZaliczenieWF.Core.Services
                         break;
                 }
             }
-
-            return Math.Round(calculatedScore, 1);
         }
 
+        /// <summary>
+        /// Zamienia ciąg znaków PESEL na tablicę int
+        /// </summary>
+        /// <param name="pESEL">Numer PESEL string</param>
+        /// <returns>Tablica int z numerami z PESEL</returns>
         private int[] GetPeselNumber(string pESEL)
         {
             var peselNumber = new int[11];
@@ -63,12 +78,22 @@ namespace ZaliczenieWF.Core.Services
             return peselNumber;
         }
 
+        /// <summary>
+        /// Obliczaz konkurencji podciągnięcia
+        /// </summary>
+        /// <param name="score">Wynik</param>
+        /// <param name="age">Wiek</param>
+        /// <param name="isMan">Płeć, true = Mężczyzna, false = Kobieta</param>
+        /// <returns>Punktacja</returns>
         private double CalculatePodciagnieciaScore(Score score, AgeGroup age, bool isMan)
         {
-            var maxScore = 21;
+            // Maksymalna oraz minimalna punktacja możliwa do otrzymania.
+            // Minimalna punktacja oraz wynik początkowy będą jeszcze ustawiana ze względu na płeć oraz grupę wiekową
+            var maxPoints = 21;
             var minAvailablePoints = 7.4;
             double startingValue = 0;
 
+            // Ustawienia początkowych wartości na podstawie grupy wiekowej oraz płci.
             switch (age)
             {
                 case AgeGroup._20:
@@ -219,23 +244,37 @@ namespace ZaliczenieWF.Core.Services
                     break;
             }
 
+            // Przeliczanie punktacji. Jeżeli wynik jest większy od ustawionego wyniku początkowego zwraca maksymalną liczbę punktów.
+            // Jeżeli wynik jest równy 1 zwraca minimalną lczbę punktów. Jeżeli wynik jest mniejszy od 1 zwraca 0.
+            // W przeciwnym wypadku od maksymalnych punktów odejmuje
+            // różnicę wyniku początkowego oraz otrzymanego wyniku pomnożony przez 0.8
             var calculatedScore = score.Quantity.Value > startingValue
-                ? maxScore
-                : score.Quantity.Value == 1 ? minAvailablePoints : score.Quantity.Value < 1 ? 0 : maxScore - (startingValue - score.Quantity.Value) * 0.8;
+                ? maxPoints
+                : score.Quantity.Value == 1 ? minAvailablePoints : score.Quantity.Value < 1 ? 0 : maxPoints - (startingValue - score.Quantity.Value) * 0.8;
             if (calculatedScore < score.MinPoints)
                 score.Passed = false;
             return Math.Round(calculatedScore, 1);
 
         }
 
+        /// <summary>
+        /// Obliczaz konkurencji marszobieg
+        /// </summary>
+        /// <param name="score">Wynik w konkurencji</param>
+        /// <param name="age">Wiek uczestnika</param>
+        /// <param name="isMan">Płeć, true = Mężczyzna, false = Kobieta</param>
+        /// <returns>Punktacja</returns>
         private double CalculateMarszobiegScore(Score score, AgeGroup age, bool isMan)
         {
-            var maxScore = 44;
+            var maxPoints = 44;
             var minScore = 0.1;
             score.MinPoints = 26;
             double startingValue = 0;
+            // Otrzymany wynik wyrażony w 5 sekundowych odstępach czasowych
             var steps = Math.Floor((score.Time.Value / 1000) / 5);
 
+            // Ustawienia początkowych wartości na podstawie grupy wiekowej oraz płci.
+            // Wartość początkowa jest wyrażona jako ilość 5 sekundowych odstępów czasowych
             switch (age)
             {
                 case AgeGroup._20:
@@ -352,17 +391,20 @@ namespace ZaliczenieWF.Core.Services
                     break;
             }
 
+            // Jeżeli wynik jest mniejszy od 12 minut zwraca maksymalną liczbę punktów
             if (steps < 144)
-                return maxScore;
+                return maxPoints;
 
+            // Uwzglednia skok w punktacji między z 18 do 16.4 punktów
             var offset = steps - startingValue;
             if (offset > 65)
             {
-                maxScore = 18;
+                maxPoints = 18;
                 offset -= 65;
             }
 
-            var calculatedScore = maxScore - (offset * 0.4);
+            // Punktacja wynosi maksymalna liczba punktwów odjąć ilość 5 sekundowych kroków razy 0.4
+            var calculatedScore = maxPoints - (offset * 0.4);
             if (calculatedScore <= 0)
             {
                 calculatedScore = minScore;
@@ -373,13 +415,22 @@ namespace ZaliczenieWF.Core.Services
             return Math.Round(calculatedScore, 1);
         }
 
+
+        /// <summary>
+        /// Obliczaz konkurencji Brzuszki
+        /// </summary>
+        /// <param name="score">Wynik w konkurencji</param>
+        /// <param name="age">Wiek uczestnika</param>
+        /// <param name="isMan">Płeć, true = Mężczyzna, false = Kobieta</param>
+        /// <returns>Punktacja</returns>
         private double CalculateBrzuszkiScore(Score score, AgeGroup age, bool isMan)
         {
-            var maxScore = 16;
+            var maxPoints = 16;
             double startingValue = 0;
             double minScore = 0;
             score.MinPoints = 10;
 
+            // Ustawienia początkowych wartości na podstawie grupy wiekowej oraz płci.
             switch (age)
             {
                 case AgeGroup._20:
@@ -512,20 +563,32 @@ namespace ZaliczenieWF.Core.Services
                     break;
             }
 
-            var calculatedScore = maxScore - (startingValue - score.Quantity.Value) * 0.2;
+            // Oblicza punktacje odejmując od punktów maksymalnych różnicę wartości początkowej z wynikiem uczestnika pomnożonej przez 0.2
+            var calculatedScore = maxPoints - (startingValue - score.Quantity.Value) * 0.2;
             if (calculatedScore < score.MinPoints)
             {
                 score.Passed = false;
             }
 
-            return calculatedScore < 0 ? minScore : calculatedScore > maxScore ? maxScore : Math.Round(calculatedScore, 1);
+            // Jeżeli wyliczona punktacja jest mniejsza od zwraca punktacje minimalną,
+            // jeżeli jest większa od punktacji maksymalnej zwraca punktacje maksymalna.
+            // W przeciwnym wypadku zwraca punktacje wyliczoną zaokrągloną do jednego iejsca po przeciwnku.
+            return calculatedScore < 0 ? minScore : calculatedScore > maxPoints ? maxPoints : Math.Round(calculatedScore, 1);
         }
 
+        /// <summary>
+        /// Obliczaz konkurencji marszobieg 10x10
+        /// </summary>
+        /// <param name="score">Wynik w konkurencji</param>
+        /// <param name="age">Wiek uczestnika</param>
+        /// <param name="isMan">Płeć, true = Mężczyzna, false = Kobieta</param>
+        /// <returns>Punktacja</returns>
         private double Calculate10x10Score(Score score, AgeGroup age, bool isMan)
         {
             double startingValue = 0;
             score.MinPoints = 2.2;
 
+            // Ustawienia początkowych wartości na podstawie grupy wiekowej oraz płci.
             switch (age)
             {
                 case AgeGroup._20:
@@ -640,7 +703,10 @@ namespace ZaliczenieWF.Core.Services
                     break;
             }
 
+            // Dziesiętna reprezentacja czasu uczestnika
             var time = Math.Round(score.Time.Value / 1000, 1);
+
+            //Wylicza punktacje stosując równanie 19 - ((wynik uczestnika - wartość początkowa) * 4)
             var calculatedScore = 19 - ((time - startingValue) * 4);
             if (calculatedScore < score.MinPoints)
                 score.Passed = false;
@@ -648,6 +714,11 @@ namespace ZaliczenieWF.Core.Services
             return calculatedScore < 0 ? 0 : calculatedScore > 19 ? 19 : Math.Round(calculatedScore, 1);
         }
 
+        /// <summary>
+        /// Oblicza grupę wiekową na podstawie wieku uczestnika
+        /// </summary>
+        /// <param name="age">Wiek uczestnika</param>
+        /// <returns>Grupa wiekowa</returns>
         private AgeGroup CalculateAgeBracket(int age)
         {
             if (age <= 20)
