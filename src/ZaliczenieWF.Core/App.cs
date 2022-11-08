@@ -11,6 +11,7 @@ namespace ZaliczenieWF.Core
         public override void Initialize()
         {
             Mvx.IoCProvider.RegisterType<ICommsService, CommsService>();
+            Mvx.IoCProvider.RegisterType<IDateTimeProvider, DateTimeProvider>();
             Mvx.IoCProvider.RegisterType<IScoreService, ScoreService>();
             Mvx.IoCProvider.RegisterType<IReportService, ReportService>();
             Mvx.IoCProvider.RegisterType<IDataIOService, CsvDataService>();

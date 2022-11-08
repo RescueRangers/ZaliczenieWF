@@ -5,6 +5,14 @@ namespace ZaliczenieWF.Core.Services
 {
     public class ScoreService : IScoreService
     {
+        //Dzieki temu rozwiazaniu możliwe jest późniejsze testowanie kodu.
+        private IDateTimeProvider _dateTimeProvider;
+        public ScoreService(IDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+
         /// <summary>
         /// Przelicza punkty wybranego uczestnika
         /// </summary>
@@ -27,7 +35,7 @@ namespace ZaliczenieWF.Core.Services
             {
                 yearOfBirth -= 100;
             }
-            var age = DateTime.Now.Year - yearOfBirth;
+            var age = _dateTimeProvider.Now.Year - yearOfBirth;
 
             // Przelicza wiek do grupy wiekowej uczestnika.
             participant.AgeGroup = CalculateAgeBracket(age);
@@ -179,9 +187,9 @@ namespace ZaliczenieWF.Core.Services
                 case AgeGroup._41_45:
                     if (isMan)
                     {
-                        startingValue = 4;
-                        minAvailablePoints = 18.6;
-                        score.MinPoints = 19.4;
+                        startingValue = 10;
+                        minAvailablePoints = 13.8;
+                        score.MinPoints = 14.6;
                         score.MinScore = "2";
                     }
                     else
@@ -266,7 +274,7 @@ namespace ZaliczenieWF.Core.Services
         /// <returns>Punktacja</returns>
         private double CalculateMarszobiegScore(Score score, AgeGroup age, bool isMan)
         {
-            var maxPoints = 44;
+            var maxPoints = 44d;
             var minScore = 0.1;
             score.MinPoints = 26;
             double startingValue = 0;
@@ -395,12 +403,12 @@ namespace ZaliczenieWF.Core.Services
             if (steps < 144)
                 return maxPoints;
 
-            // Uwzglednia skok w punktacji między z 18 do 16.4 punktów
+            // Uwzglednia skok w punktacji z 18 do 16.4 punktów
             var offset = steps - startingValue;
-            if (offset > 65)
+            if (offset >= 66)
             {
-                maxPoints = 18;
-                offset -= 65;
+                maxPoints = 16.4;
+                offset -= 66;
             }
 
             // Punktacja wynosi maksymalna liczba punktwów odjąć ilość 5 sekundowych kroków razy 0.4
