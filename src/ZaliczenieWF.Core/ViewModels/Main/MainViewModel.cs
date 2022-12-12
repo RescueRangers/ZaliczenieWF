@@ -52,6 +52,10 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
             // Czytanie listy uczestników z pliku z danymi
             Participants = new ObservableCollection<Participant>(await _dataIO.ReadParticipantsAsync());
+            foreach (var participant in Participants)
+            {
+                _scoreService.CalculateScores(participant);
+            }
         }
 
         private void OpenScoreCard()

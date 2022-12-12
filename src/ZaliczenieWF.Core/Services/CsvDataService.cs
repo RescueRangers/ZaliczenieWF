@@ -29,12 +29,12 @@ namespace ZaliczenieWF.Core.Services
 
             using var writer = new StreamWriter(_filePath, false, new UTF8Encoding(true));
             // Nagłówek pliku csv.
-            await writer.WriteLineAsync("Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumn;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty");
+            await writer.WriteLineAsync("Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumna;Grupa wiekowa;Plec;Ocena;Suma punktow;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty");
 
             foreach (Participant participant in participants)
             {
                 // Zapisuje dane uczestnika bez przechodzenia do nowej linii
-                await writer.WriteAsync($"{participant.Name};{participant.Stopien};{participant.PESEL};{participant.JednostkaWojskowa};{participant.Kolumna};");
+                await writer.WriteAsync($"{participant.Name};{participant.Stopien};{participant.PESEL};{participant.JednostkaWojskowa};{participant.Kolumna};{participant.AgeGroupString};{participant.GenderString};{participant.Ocena};{participant.Scores.Sum(s=> s.Points)};");
                 // Sortowanie punktacji po konkurencji
                 IEnumerable<Score> orderedScores = participant.Scores.OrderBy(x => x.Competition);
                 foreach (Score score in orderedScores)
@@ -93,7 +93,7 @@ namespace ZaliczenieWF.Core.Services
                     Kolumna = data[4]
                 };
                 var scores = new List<Score>();
-                for (var i = 5; i < data.Length-1; i+=4)
+                for (var i = 9; i < data.Length-1; i+=4)
                 {
                     // Czyta konkurencje z pliku
                     Competition competition = data[i].GetValueFromDescription<Competition>();

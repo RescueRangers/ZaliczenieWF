@@ -205,6 +205,8 @@ namespace ZaliczenieWF.Models
         }
 
         public AgeGroup AgeGroup { get; set; }
+        public Gender Gender { get; set; }
+        public string GenderString => Gender.GetDescription();
 
         public string AgeGroupString => AgeGroup.GetDescription();
 

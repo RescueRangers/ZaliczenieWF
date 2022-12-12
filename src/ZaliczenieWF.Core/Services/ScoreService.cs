@@ -42,7 +42,7 @@ namespace ZaliczenieWF.Core.Services
 
             // Sprawdza płeć użytkownika.
             // Wg https://www.gov.pl/web/gov/czym-jest-numer-pesel przedostatnia cyfra pesel u mężczyzn jest nieparzysta.
-            var isMan = peselNumber[9] % 2 == 1;
+            participant.Gender = peselNumber[9] % 2 == 1 ? Gender.Male : Gender.Female;
 
             // Przelicza wszystkie konkurencje
             foreach (Score score in participant.Scores)
@@ -50,16 +50,16 @@ namespace ZaliczenieWF.Core.Services
                 switch (score.Competition)
                 {
                     case Competition._10x10:
-                        score.Points = Calculate10x10Score(score, participant.AgeGroup, isMan);
+                        score.Points = Calculate10x10Score(score, participant.AgeGroup, participant.Gender == Gender.Male);
                         break;
                     case Competition.Brzuszki:
-                        score.Points = CalculateBrzuszkiScore(score, participant.AgeGroup, isMan);
+                        score.Points = CalculateBrzuszkiScore(score, participant.AgeGroup, participant.Gender == Gender.Male);
                         break;
                     case Competition.Podciaganie:
-                        score.Points = CalculatePodciagnieciaScore(score, participant.AgeGroup, isMan);
+                        score.Points = CalculatePodciagnieciaScore(score, participant.AgeGroup, participant.Gender == Gender.Male);
                         break;
                     case Competition.Marszobieg:
-                        score.Points = CalculateMarszobiegScore(score, participant.AgeGroup, isMan);
+                        score.Points = CalculateMarszobiegScore(score, participant.AgeGroup, participant.Gender == Gender.Male);
                         break;
                     case Competition.Null:
                         break;
