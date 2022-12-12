@@ -82,7 +82,7 @@ namespace ZaliczenieWF.Core.Services
 
             while (!reader.EndOfStream)
             {
-                var line = await reader.ReadLineAsync();
+                var line = reader.ReadLine();
                 var data = line.Split(';');
                 var participant = new Participant
                 {
@@ -92,6 +92,12 @@ namespace ZaliczenieWF.Core.Services
                     JednostkaWojskowa = data[3],
                     Kolumna = data[4]
                 };
+                if(data.Length < 10)
+                {
+                    participant.Scores = new ObservableCollection<Score>();
+                    participants.Add(participant);
+                    continue;
+                }
                 var scores = new List<Score>();
                 for (var i = 9; i < data.Length-1; i+=4)
                 {

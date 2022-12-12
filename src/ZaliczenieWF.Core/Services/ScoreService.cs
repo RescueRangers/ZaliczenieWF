@@ -420,7 +420,7 @@ namespace ZaliczenieWF.Core.Services
 
             if (calculatedScore < score.MinPoints)
                 score.Passed = false;
-            return Math.Round(calculatedScore, 1);
+            return calculatedScore >= maxPoints ? maxPoints : Math.Round(calculatedScore, 1);
         }
 
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MvvmCross.Commands;
@@ -52,7 +53,7 @@ namespace ZaliczenieWF.Core.ViewModels.Main
 
             // Czytanie listy uczestników z pliku z danymi
             Participants = new ObservableCollection<Participant>(await _dataIO.ReadParticipantsAsync());
-            foreach (var participant in Participants)
+            foreach (var participant in Participants.Where(p => p.Scores.Any()))
             {
                 _scoreService.CalculateScores(participant);
             }
