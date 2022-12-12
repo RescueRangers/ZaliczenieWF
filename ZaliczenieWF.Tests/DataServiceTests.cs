@@ -30,7 +30,7 @@ namespace ZaliczenieWF.Tests
 
             var participants = await dataService.ReadParticipantsAsync();
 
-            Assert.That(participants.Count(), Is.EqualTo(3));
+            Assert.That(participants.Count(), Is.EqualTo(17));
 
             _participants = participants.ToList();
         }

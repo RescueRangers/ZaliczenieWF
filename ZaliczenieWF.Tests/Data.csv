@@ -1,4 +1,18 @@
-﻿Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumn;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty
-Test Testinski;Szeregowy;86110107019;JW;I;10x10;00:33,70;00:32,65;6,6;Brzuszki;35;67;16;Podciąganie;2;13;21;Marszobieg;16:55;16:19,00;29,2;
-Radosław Radomski;Kapral;87110107019;JW4975;II;10x10;00:33,40;00:31,70;9;Brzuszki;40;54;12,8;Podciąganie;2;7;15,4;Marszobieg;16:15;16:22,65;25,6;
-Pan Bonifacy;Sierżant;85770146496;JW4269;III;10x10;00:33,20;00:31,70;8,2;Brzuszki;40;66;15,2;Podciąganie;2;7;14,6;Marszobieg;16:15;15:29,75;30;
+﻿Imie i nazwisko;Stopień;PESEL;Jednowstka Wojskowa;Kolumna;Grupa wiekowa;Plec;Ocena;Suma punktow;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty;Konkurencja;Minumum;Wynik;Punkty
+Jaworska Magdalena;starszy szeregowy specjalista;72100435484;JW5889;IV;VII;K;5;102,8;Bieg wahadłowy 10x10;00:36,40;00:33,00;17,8;Skłony tułowia;13;42;16;Podciąganie;2;2;20,2;Marszobieg 3000m;26:15;16:23,00;48,8;
+Pawlak Eliza;starszy szeregowy;71010711622;JW1749;IV;0;M;NA;0;
+Woźniak Otylia;starszy szeregowy;71092781742;JW1749;IV;0;M;NA;0;
+Zawadzka Bogusława;szeregowy;98020293164;JW5889;IV;0;M;NA;0;
+Krupa Dagmara;starszy szeregowy;97050323623;JW5889;IV;0;M;NA;0;
+Kowalczyk Arleta;szeregowy;99021458662;JW5889;IV;0;M;NA;0;
+Kucharska Justyna;szeregowy;99031923848;JW1749;IV;0;M;NA;0;
+Czerwińska Marzanna;sierżant;73100527623;JW1749;II;0;M;NA;0;
+Jaworska Agnieszka;kapral;79121621689;JW5889;II;0;M;NA;0;
+Witkowska Marlena;starszy kapral;83110524187;JW5889;II;0;M;NA;0;
+Górecka Gabriela;szeregowy;96061789345;JW1749;IV;0;M;NA;0;
+Sikora Kornelia;starszy szeregowy specjalista;70061985383;JW1749;IV;0;M;NA;0;
+Tomaszewska Halina;szeregowy;99260512187;JW1749;IV;0;M;NA;0;
+Makowska Amalia;szeregowy;99011781824;JW5889;IV;0;M;NA;0;
+Baranowska Małgorzata;plutonowy;83100553627;JW5889;IV;0;M;NA;0;
+Kaczmarczyk Barbara;starszy szeregowy;86061061381;JW5889;IV;0;M;NA;0;
+Kowalska Arleta;porucznik;74022558665;JW1749;II;0;M;NA;0;
